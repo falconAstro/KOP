@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TimeManagementApp.Pages.SharedTasks"
+             Title="SharedTasks">
+    <VerticalStackLayout>
+        <Label 
+            Text="Create a new shared task" 
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+        <Entry 
+            x:Name="EntrySharedTask" 
+            Placeholder="Enter the new task" />
+        <Entry 
+            x:Name="EntryUsername" 
+            Placeholder="Enter username" />
+        <Button 
+            x:Name="BtnCreateSharedTask"  
+            Clicked="BtnCreateSharedTask_Clicked" 
+            Text="Create Task"/>
+    </VerticalStackLayout> 
+</ContentPage>

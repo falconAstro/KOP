@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TimeManagementApp.Pages.LoginPage"
+             Title="LoginPage">
+    <VerticalStackLayout>
+        <Label 
+            Text="Please Log In to proceed!" 
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+        <Label 
+            Text="Username:"/>
+        <Entry 
+            x:Name="UsernameEntry" 
+            Placeholder="Enter your username" />
+        <Label 
+            Text="Password:"/>
+        <Entry 
+            x:Name="PasswordEntry" 
+            Placeholder="Enter your Password"/>
+        <Button 
+            x:Name="btnLogIn"  
+            Clicked="BtnLogIn_Clicked" 
+            Text="Log In"/>
+        <Label 
+            Text="Don't have an account?"/>
+        <Button 
+            x:Name="btnGoToSignUpPage" 
+            Clicked="BtnGoToSignUpPage_Clicked" 
+            Text="Sign Up!"/>
+    </VerticalStackLayout>
+</ContentPage>
