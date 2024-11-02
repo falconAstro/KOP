@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TimeManagementApp.Pages.PersonalTasks"
+             Title="PersonalTasks">
+    <VerticalStackLayout>
+        <Label 
+            Text="Create a new personal task" 
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+        <Entry 
+            x:Name="EntryPersonalTask" 
+            Placeholder="Enter the new task" />
+        <Button 
+            x:Name="BtnCreatePersonalTask"  
+            Clicked="BtnCreatePersonalTask_Clicked" 
+            Text="Create Task"/>
+        
+        <!-- zobrazenie zoznamu taskov nacitanych z databazy-->
+        <CollectionView ItemsSource="{Binding PersonalTaskList}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Label Text ="{Binding Task}"/>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+         </CollectionView>
+    </VerticalStackLayout>
+</ContentPage>
