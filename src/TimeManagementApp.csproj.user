@@ -20,6 +20,9 @@
     <MauiXaml Update="Pages\PersonalTasks.xaml">
       <SubType>Designer</SubType>
     </MauiXaml>
+    <MauiXaml Update="Pages\SettingsPage.xaml">
+      <SubType>Designer</SubType>
+    </MauiXaml>
     <MauiXaml Update="Pages\SharedEvents.xaml">
       <SubType>Designer</SubType>
     </MauiXaml>

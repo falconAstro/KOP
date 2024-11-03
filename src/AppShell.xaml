@@ -32,5 +32,9 @@
         <ShellContent Title="Shopping Lists"
               ContentTemplate="{DataTemplate Pages:ShoppingLists}" Route="ShoppingLists"/>
     </FlyoutItem>
+    <FlyoutItem Title="Settings">
+        <ShellContent Title="Settings"
+          ContentTemplate="{DataTemplate Pages:SettingsPage}" Route="SettingsPage"/>
+    </FlyoutItem>
 
 </Shell>

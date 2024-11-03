@@ -15,6 +15,7 @@ namespace TimeManagementApp
             Routing.RegisterRoute(nameof(SharedTasks), typeof(SharedTasks));
             Routing.RegisterRoute(nameof(ShoppingLists), typeof(ShoppingLists));
             Routing.RegisterRoute(nameof(SharedEvents), typeof(SharedEvents));
+            Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
         }
     }
 }
