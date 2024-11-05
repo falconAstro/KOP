@@ -22,6 +22,7 @@ public partial class PersonalTasks : ContentPage
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)
     {
         base.OnNavigatedTo(args);
+        PersonalTaskList.Clear();
         await LoadTasksAsync();
     }
 

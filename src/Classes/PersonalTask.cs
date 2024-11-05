@@ -10,4 +10,19 @@ namespace TimeManagementApp.Classes
     {
         public required string Task { get; set; }
     }
+    public class SharedTask
+    {
+        public required string Task { get; set; }
+        public required string Username {  get; set; }
+    }
+    public class SharedEvent
+    {
+        public required string Event { get; set; }
+        public required string Date { get; set; }
+    }
+    public class ShoppingList
+    {
+        public required string ShoppingItems { get; set; }
+        public required string Username { get; set; }
+    }
 }

@@ -18,5 +18,19 @@
             x:Name="BtnCreateSharedEvent"  
             Clicked="BtnCreateSharedEvent_Clicked" 
             Text="Create Event"/>
+        <Label
+            Text="Current events"
+            HorizontalOptions="Center" />
+        
+        <CollectionView ItemsSource="{Binding SharedEventsList}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <VerticalStackLayout>
+                        <Label Grid.Column="1" Text ="{Binding Event}"/>
+                        <Label Grid.Column="2" Text ="{Binding Date}"/>
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
     </VerticalStackLayout> 
 </ContentPage>

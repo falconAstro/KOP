@@ -23,6 +23,7 @@ namespace TimeManagementApp
             //Firebase client
             builder.Services.AddSingleton(new FirebaseClient("https://timemanagement-4d83d-default-rtdb.firebaseio.com/"));
             builder.Services.AddSingleton<PersonalTasks>();
+            builder.Services.AddSingleton<SharedEvents>();
             return builder.Build();
         }
     }

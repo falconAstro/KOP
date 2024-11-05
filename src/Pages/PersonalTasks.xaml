@@ -15,7 +15,9 @@
             x:Name="BtnCreatePersonalTask"  
             Clicked="BtnCreatePersonalTask_Clicked" 
             Text="Create Task"/>
-        
+        <Label
+            Text="Current tasks"
+            HorizontalOptions="Center" />
         <!-- zobrazenie zoznamu taskov nacitanych z databazy-->
         <CollectionView ItemsSource="{Binding PersonalTaskList}">
             <CollectionView.ItemTemplate>

@@ -12,7 +12,7 @@
     
     <!-- login a sign up stranky (treba fixnut viditelnost login stranky vo flyout menu)-->
     
-    <ShellContent Title="Log In" ContentTemplate="{DataTemplate Pages:LoginPage}" Route="LoginPage" Shell.FlyoutBehavior="Disabled"/>
+    <ShellContent Title="Log In" ContentTemplate="{DataTemplate Pages:LoginPage}" Route="LoginPage" Shell.FlyoutBehavior="Disabled" FlyoutItemIsVisible="False"/>
     <ShellContent Title="Sign Up" ContentTemplate="{DataTemplate Pages:SignUpPage}" Route="SignUpPage" Shell.FlyoutBehavior="Disabled" FlyoutItem.IsVisible="False"/>
     
     <!-- ostatne viditelne stranky vo flyout menu-->

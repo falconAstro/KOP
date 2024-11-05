@@ -14,8 +14,16 @@ public partial class LoginPage : ContentPage
         
 	}
 
-	//Stlacenie login tlacidla
-	private void BtnLogIn_Clicked(object sender, EventArgs e)
+	//Vymazanie Entry pri nacitani
+    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        base.OnNavigatedTo(args);
+		UsernameEntry.Text = string.Empty;
+		PasswordEntry.Text = string.Empty;	
+    }
+
+    //Stlacenie login tlacidla
+    private void BtnLogIn_Clicked(object sender, EventArgs e)
 	{
 		if (Username == UsernameEntry.Text & Password == PasswordEntry.Text)
 		{
