@@ -12,9 +12,17 @@ public partial class SignUpPage : ContentPage
     public SignUpPage(FirebaseAuthClient firebaseAuthClient)
 	{
 		InitializeComponent();
-        BindingContext = this;
         _firebaseAuthClient = firebaseAuthClient;
 	}
+    //Vymazanie Entry pri nacitani
+    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        base.OnNavigatedTo(args);
+        EntryEMail.Text = string.Empty;
+        EntryPassword.Text = string.Empty;
+        EntryUsername.Text = string.Empty;
+        EntryRepeatedPassword.Text = string.Empty;
+    }
     private async void SignUp()
     {
         try
@@ -34,12 +42,12 @@ public partial class SignUpPage : ContentPage
             }
         }
         //Errory spojene s Firebase Auth systemom (nespravny email, atd)
-        catch (FirebaseAuthException e)
+        catch (FirebaseAuthException ex)
         {
             await Shell.Current.DisplayAlert("", "Firebase Error", "OK");
         }
         //Ostatne errory
-        catch (Exception e)
+        catch (Exception ex)
         {
             await Shell.Current.DisplayAlert("", "Error", "OK");
         }
@@ -48,9 +56,5 @@ public partial class SignUpPage : ContentPage
     private async void BtnSignUp_Clicked(object sender, EventArgs e)
     {
         SignUp();
-        EntryEMail.Text = string.Empty;
-        EntryPassword.Text = string.Empty;
-        EntryUsername.Text = string.Empty;
-        EntryRepeatedPassword.Text = string.Empty;
     }
 }

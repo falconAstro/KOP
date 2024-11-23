@@ -1,36 +1,45 @@
+using Firebase.Auth;
+
 namespace TimeManagementApp.Pages;
 
 public partial class LoginPage : ContentPage
 {
-	//Primitivny login
-	public string Username { get; }
-	public string Password { get; }
-	public LoginPage()
+    private readonly FirebaseAuthClient _firebaseAuthClient;
+    public LoginPage(FirebaseAuthClient firebaseAuthClient)
 	{
 		InitializeComponent();
-
-		Username = "Bob";
-		Password = "1234";
-        
+        _firebaseAuthClient = firebaseAuthClient;
 	}
 
 	//Vymazanie Entry pri nacitani
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)
     {
         base.OnNavigatedTo(args);
-		UsernameEntry.Text = string.Empty;
-		PasswordEntry.Text = string.Empty;	
+        EntryEMail.Text = string.Empty;
+		EntryPassword.Text = string.Empty;	
     }
-
-    //Stlacenie login tlacidla
-    private void BtnLogIn_Clicked(object sender, EventArgs e)
+    //Stlacenie login tlacidla a prihlasenie
+    private async void BtnLogIn_Clicked(object sender, EventArgs e)
 	{
-		if (Username == UsernameEntry.Text & Password == PasswordEntry.Text)
-		{
-			
-            Shell.Current.GoToAsync($"//{nameof(PersonalTasks)}");
+        try
+        {
+            //Prihlasenie
+            var credentials = await _firebaseAuthClient.SignInWithEmailAndPasswordAsync(email: EntryEMail.Text, password: EntryPassword.Text);
+            await Shell.Current.DisplayAlert("", "Signed in successfully", "OK");
+            //Otvorenie taskov
+            await Shell.Current.GoToAsync($"//{nameof(PersonalTasks)}");
         }
-		
+        //Errory spojene s Firebase Auth systemom (nespravny email, atd)
+        catch (FirebaseAuthException ex)
+        {
+            await Shell.Current.DisplayAlert("", "Firebase error", "OK");
+        }
+        //Ostatne errory
+        catch (Exception ex)
+        {
+            await Shell.Current.DisplayAlert("", "Error", "OK");
+        }
+        
 	}
 
 	//Stlacenie SignUp tlacidla

@@ -9,14 +9,14 @@
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
         <Label 
-            Text="Username:"/>
+            Text="E-mail:"/>
         <Entry 
-            x:Name="UsernameEntry" 
-            Placeholder="Enter your username" />
+            x:Name="EntryEMail" 
+            Placeholder="Enter your e-mail" />
         <Label 
             Text="Password:"/>
         <Entry 
-            x:Name="PasswordEntry" 
+            x:Name="EntryPassword" 
             Placeholder="Enter your Password"/>
         <Button 
             x:Name="btnLogIn"  
