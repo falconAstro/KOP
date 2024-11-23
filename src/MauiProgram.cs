@@ -1,4 +1,6 @@
-﻿using Firebase.Database;
+﻿using Firebase.Auth;
+using Firebase.Auth.Providers;
+using Firebase.Database;
 using Microsoft.Extensions.Logging;
 using TimeManagementApp.Pages;
 
@@ -20,10 +22,21 @@ namespace TimeManagementApp
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif
-            //Firebase client
+            //Firebase client pre databazu
             builder.Services.AddSingleton(new FirebaseClient("https://timemanagement-4d83d-default-rtdb.firebaseio.com/"));
+            //Firebase client pre Auth
+            builder.Services.AddSingleton(new FirebaseAuthClient(new FirebaseAuthConfig()
+            {
+                ApiKey = "AIzaSyDf5i5Ycs - ygbAFJfdPV3_kwRtTHRJra0Q",
+                AuthDomain = "timemanagement-4d83d.web.app",
+                Providers = [new EmailProvider()]
+            }));
+
+            //Pages
             builder.Services.AddSingleton<PersonalTasks>();
             builder.Services.AddSingleton<SharedEvents>();
+            builder.Services.AddSingleton<SignUpPage>();
+
             return builder.Build();
         }
     }

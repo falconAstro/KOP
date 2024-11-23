@@ -19,10 +19,18 @@
             Text="Current tasks"
             HorizontalOptions="Center" />
         <!-- zobrazenie zoznamu taskov nacitanych z databazy-->
+
         <CollectionView ItemsSource="{Binding PersonalTaskList}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Label Text ="{Binding Task}"/>
+                    <SwipeView>
+                        <Label Text ="{Binding Task}"/>
+                        <SwipeView.RightItems>
+                            <SwipeItems>
+                                <SwipeItem Text="Delete"></SwipeItem>
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                    </SwipeView>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
          </CollectionView>

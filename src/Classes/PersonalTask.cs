@@ -9,6 +9,7 @@ namespace TimeManagementApp.Classes
     public class PersonalTask
     {
         public required string Task { get; set; }
+        public string Id { get; set; }
     }
     public class SharedTask
     {

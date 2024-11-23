@@ -5,21 +5,32 @@
              Title="SignUpPage">
     <VerticalStackLayout>
         <Label 
-            Text="create a new account" 
+            Text="Create a new account" 
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
         <Label 
             Text="Username:"/>
-        <Entry/>
+        <Entry
+            x:Name="EntryUsername"
+            Placeholder="Enter a new username"/>
+        <Label 
+            Text="E-mail:"/>
+        <Entry
+            x:Name="EntryEMail"
+            Placeholder="Enter your e-mail"/>
         <Label 
             Text="Password:"/>
-        <Entry/>
+        <Entry
+            x:Name="EntryPassword"
+            Placeholder="Enter a new password"/>
         <Label 
             Text="Repeat Password:"/>
-        <Entry/>
+        <Entry
+            x:Name="EntryRepeatedPassword"
+            Placeholder="Repeat the password"/>
         <Button 
             x:Name="btnSignUp"  
             Clicked="BtnSignUp_Clicked" 
-            Text="Log In"/>
+            Text="Sign Up"/>
     </VerticalStackLayout>
 </ContentPage>

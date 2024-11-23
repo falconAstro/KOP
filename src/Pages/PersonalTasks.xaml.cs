@@ -22,30 +22,36 @@ public partial class PersonalTasks : ContentPage
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)
     {
         base.OnNavigatedTo(args);
-        PersonalTaskList.Clear();
+       
         await LoadTasksAsync();
     }
 
     //Funkcia nacitania taskov z databazy
     public async Task LoadTasksAsync()
     {
+        PersonalTaskList.Clear();
         this.firebaseClient.Child("PersonalTask").AsObservable<PersonalTask>().Subscribe((item) =>
         {
             if (item.Object != null)
             {
+                item.Object.Id = item.Key;
                 PersonalTaskList.Add(item.Object);
             }
         });
     }
 
     //Vytvorenie kednoducheho tasku v databaze
-    private void BtnCreatePersonalTask_Clicked(object sender, EventArgs e)
+    private async void BtnCreatePersonalTask_Clicked(object sender, EventArgs e)
     {
-        this.firebaseClient.Child("PersonalTask").PostAsync(new PersonalTask
-        {
-            Task = EntryPersonalTask.Text
-        });
+        await this.firebaseClient.Child("PersonalTask").PostAsync(new PersonalTask{Task = EntryPersonalTask.Text});
 
         EntryPersonalTask.Text = string.Empty;
+
+        await Shell.Current.DisplayAlert("", "Task created", "OK");
+    }
+    private async void DeletePersonalTask(string Id)
+    {
+        await this.firebaseClient.Child($"PersonalTask/{Id}").DeleteAsync();
+        await LoadTasksAsync();
     }
 }
