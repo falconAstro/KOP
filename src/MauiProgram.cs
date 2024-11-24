@@ -34,10 +34,13 @@ namespace TimeManagementApp
 
             //Pages
             builder.Services.AddSingleton<PersonalTasks>();
+            builder.Services.AddSingleton<SharedTasks>();
             builder.Services.AddSingleton<SharedEvents>();
+            builder.Services.AddSingleton<ShoppingLists>();
             builder.Services.AddSingleton<SignUpPage>();
             builder.Services.AddSingleton<LoginPage>();
             builder.Services.AddSingleton<SettingsPage>();
+            
 
             return builder.Build();
         }

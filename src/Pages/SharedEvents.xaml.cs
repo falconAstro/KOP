@@ -1,14 +1,19 @@
 using Firebase.Database;
 using Firebase.Database.Query;
 using System.Collections.ObjectModel;
-using TimeManagementApp.Classes;
 
 namespace TimeManagementApp.Pages;
 
 public partial class SharedEvents : ContentPage
 {
     private readonly FirebaseClient firebaseClient;
-
+    public class SharedEvent
+    {
+        public string Username { get; set; }
+        public required string Event { get; set; }
+        public required string Date { get; set; }
+        public string EventId {  get; set; }
+    }
     public ObservableCollection<SharedEvent> SharedEventsList { get; set; } = [];
 
     public SharedEvents(FirebaseClient firebaseClient)

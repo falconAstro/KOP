@@ -12,7 +12,15 @@ public partial class SettingsPage : ContentPage
     }
 	private void BtnLogOut_Clicked (object sender, EventArgs e)
 	{
-        _firebaseAuthClient.SignOut();
-        Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
+        try
+        {
+            _firebaseAuthClient.SignOut();
+            Shell.Current.DisplayAlert("", "User successfully signed out", "OK");
+            Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
+        }
+        catch (Exception ex)
+        {
+            Shell.Current.DisplayAlert("", "Error", "OK");
+        }
     }
 }

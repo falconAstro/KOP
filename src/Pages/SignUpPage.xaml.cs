@@ -2,7 +2,6 @@ using Firebase.Auth;
 using Firebase.Database;
 using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
-using TimeManagementApp.Classes;
 
 namespace TimeManagementApp.Pages;
 
