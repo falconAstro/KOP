@@ -1,5 +1,6 @@
 using Firebase.Auth;
 using Firebase.Database;
+using Firebase.Database.Query;
 using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
 
@@ -8,11 +9,28 @@ namespace TimeManagementApp.Pages;
 public partial class SignUpPage : ContentPage
 {
     private readonly FirebaseAuthClient _firebaseAuthClient;
-    public SignUpPage(FirebaseAuthClient firebaseAuthClient)
+    private readonly FirebaseClient _firebaseClient;
+
+    public User User { get; set; }
+    public class RegisteredUser
+    {
+        public string Username { get; set; }
+        public string UserID { get; set; }
+        public string Email { get; set; }
+        public RegisteredUser(string _Username, string _UserID, string _Email)
+        {
+            Username = _Username;
+            UserID = _UserID;
+            Email = _Email;
+
+        }
+    }
+    public SignUpPage(FirebaseAuthClient firebaseAuthClient, FirebaseClient firebaseClient)
 	{
 		InitializeComponent();
         _firebaseAuthClient = firebaseAuthClient;
-	}
+        _firebaseClient = firebaseClient;
+    }
     //Vymazanie Entry pri nacitani
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)
     {
@@ -24,6 +42,7 @@ public partial class SignUpPage : ContentPage
     }
     private async void SignUp()
     {
+        
         try
         {
             //Porovnanie oboch password entry
@@ -31,6 +50,15 @@ public partial class SignUpPage : ContentPage
             {
                 //Vytvorenie pouzivatela
                 var credentials = await _firebaseAuthClient.CreateUserWithEmailAndPasswordAsync(email:EntryEMail.Text, password:EntryPassword.Text, displayName:EntryUsername.Text);
+
+                //log in
+                await _firebaseAuthClient.SignInWithEmailAndPasswordAsync(email: EntryEMail.Text, password: EntryPassword.Text);
+                User = _firebaseAuthClient.User;
+
+                //vytvorenie objektu registered user
+                await _firebaseClient.Child("RegisteredUsers").PostAsync(new RegisteredUser(EntryUsername.Text, User.Uid, EntryEMail.Text));
+                //log out
+                _firebaseAuthClient.SignOut();
                 await Shell.Current.DisplayAlert("", "Signed up successfully", "OK");
                 //Navrat na Log In page
                 await Shell.Current.GoToAsync("..");

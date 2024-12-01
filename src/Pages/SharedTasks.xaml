@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TimeManagementApp.Pages.SharedTasks"
@@ -11,18 +10,23 @@
         <Entry 
             x:Name="EntrySharedTask" 
             Placeholder="Enter the new task" />
-        <Entry 
-            x:Name="EntryReceiverUsername" 
-            Placeholder="Enter username" />
+        <Picker x:Name="picker"
+                Title="Select a target user"
+                ItemsSource ="{Binding RegisteredUserList}"
+                ItemDisplayBinding="{Binding Username}"
+                SelectedItem="{Binding SelectedUser}"/>
         <Button 
             x:Name="BtnCreateSharedTask"  
             Clicked="BtnCreateSharedTask_Clicked" 
             Text="Create Task"/>
-
+        
         <CollectionView ItemsSource="{Binding SharedTaskList}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Label Text ="{Binding Task}"/>
+                    <VerticalStackLayout>
+                        <Label Text = "{Binding Task}"/>
+                        <Label Text = "{Binding Username}"/>
+                    </VerticalStackLayout>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
