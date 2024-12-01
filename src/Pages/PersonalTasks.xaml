@@ -24,7 +24,7 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <SwipeView>
-                        <Label Text ="{Binding Task}"/>
+                        <Label Text ="{Binding Task}" x:Name="TaskLabel"/>
                         <SwipeView.RightItems>
                             <SwipeItems>
                                 <SwipeItem Text="Delete"></SwipeItem>
