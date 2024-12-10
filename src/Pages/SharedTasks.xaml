@@ -10,16 +10,17 @@
         <Entry 
             x:Name="EntrySharedTask" 
             Placeholder="Enter the new task" />
-        <Picker x:Name="picker"
-                Title="Select a target user"
-                ItemsSource ="{Binding RegisteredUserList}"
-                ItemDisplayBinding="{Binding Username}"
-                SelectedItem="{Binding SelectedUser}"/>
+        <Picker 
+            x:Name="picker"
+            Title="Select a target user"
+            ItemsSource ="{Binding RegisteredUserList}"
+            ItemDisplayBinding="{Binding Username}"
+            SelectedItem="{Binding SelectedUser}"/>
         <Button 
             x:Name="BtnCreateSharedTask"  
             Clicked="BtnCreateSharedTask_Clicked" 
             Text="Create Task"/>
-        
+
         <CollectionView ItemsSource="{Binding SharedTaskList}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>

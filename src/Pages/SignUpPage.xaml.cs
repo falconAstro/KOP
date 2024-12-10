@@ -1,8 +1,7 @@
 using Firebase.Auth;
 using Firebase.Database;
 using Firebase.Database.Query;
-using System.Collections.ObjectModel;
-using System.Runtime.CompilerServices;
+using TimeManagementApp.Classes;
 
 namespace TimeManagementApp.Pages;
 
@@ -12,19 +11,6 @@ public partial class SignUpPage : ContentPage
     private readonly FirebaseClient _firebaseClient;
 
     public User User { get; set; }
-    public class RegisteredUser
-    {
-        public string Username { get; set; }
-        public string UserID { get; set; }
-        public string Email { get; set; }
-        public RegisteredUser(string _Username, string _UserID, string _Email)
-        {
-            Username = _Username;
-            UserID = _UserID;
-            Email = _Email;
-
-        }
-    }
     public SignUpPage(FirebaseAuthClient firebaseAuthClient, FirebaseClient firebaseClient)
 	{
 		InitializeComponent();
@@ -56,7 +42,7 @@ public partial class SignUpPage : ContentPage
                 User = _firebaseAuthClient.User;
 
                 //vytvorenie objektu registered user
-                await _firebaseClient.Child("RegisteredUsers").PostAsync(new RegisteredUser(EntryUsername.Text, User.Uid, EntryEMail.Text));
+                await _firebaseClient.Child("RegisteredUsers").PostAsync(new RegisteredUser{ Username=EntryUsername.Text, UserID = User.Uid, Email=EntryEMail.Text });
                 //log out
                 _firebaseAuthClient.SignOut();
                 await Shell.Current.DisplayAlert("", "Signed up successfully", "OK");

@@ -2,37 +2,36 @@ using Firebase.Auth;
 using Firebase.Database;
 using Firebase.Database.Query;
 using System.Collections.ObjectModel;
-using static TimeManagementApp.Pages.SignUpPage;
+using TimeManagementApp.Classes;
+
 namespace TimeManagementApp.Pages;
 
 public partial class SharedTasks : ContentPage
 {
-    private readonly FirebaseClient _firebaseClient;
     private readonly FirebaseAuthClient _firebaseAuthClient;
-    public class SharedTask
-    {
-        public string Username { get; set; }
-        public required string Task { get; set; }
-        public string TaskId { get; set; }
-    }
-    public User User { get; set; }
-    public RegisteredUser SelectedUser {  get; set; }
+    private readonly FirebaseClient _firebaseClient;
+    public List<RegisteredUser> RegisteredUserList { get; set; } = [];
     public ObservableCollection<SharedTask> SharedTaskList { get; set; } = [];
-    public ObservableCollection<RegisteredUser> RegisteredUserList { get; set; } = [];
+    public User User { get; set; }
+    public RegisteredUser SelectedUser { get; set; }
     public SharedTasks(FirebaseClient firebaseClient, FirebaseAuthClient firebaseAuthClient)
 	{
 		InitializeComponent();
         BindingContext = this;
-        BindingContext = this;
-        _firebaseClient = firebaseClient;
         _firebaseAuthClient = firebaseAuthClient;
+        _firebaseClient = firebaseClient;
     }
     //Nacitanie taskov pri otvoreni stranky 
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)
     {
         base.OnNavigatedTo(args);
         User = _firebaseAuthClient.User;
-        await LoadRegisteredUsers();
+
+        var _RegisteredUserList = await GetRegisteredUsers();
+        RegisteredUserList.Clear();
+        RegisteredUserList = _RegisteredUserList.ToList();
+        picker.ItemsSource = RegisteredUserList;
+
         await LoadSharedTasksAsync();
     }
     //Funkcia nacitania taskov z databazy
@@ -48,6 +47,15 @@ public partial class SharedTasks : ContentPage
             }
         });
     }
+    public async Task<List<RegisteredUser>> GetRegisteredUsers()
+    {
+        return (await _firebaseClient.Child("RegisteredUsers").OnceAsync<RegisteredUser>()).Select(item => new RegisteredUser
+        {
+            Username = item.Object.Username,
+            UserID = item.Object.UserID,
+            Email = item.Object.Email,
+        }).ToList();
+    }
     private async void BtnCreateSharedTask_Clicked(object sender, EventArgs e)
     {
         await _firebaseClient.Child("SharedTask").Child(SelectedUser.UserID).PostAsync(new SharedTask { Task = EntrySharedTask.Text,Username = User.Uid });
@@ -56,17 +64,6 @@ public partial class SharedTasks : ContentPage
         picker.SelectedItem = null;
 
         await Shell.Current.DisplayAlert("", "Task created", "OK");
-    }
-    private async Task LoadRegisteredUsers()
-    {
-        RegisteredUserList.Clear();
-        _firebaseClient.Child("RegisteredUsers").AsObservable<RegisteredUser>().Subscribe((item) =>
-        {
-            if (item.Object != null && item.Object.UserID != User.Uid)
-            {
-                RegisteredUserList.Add(item.Object);
-            }
-        });
     }
     void OnPickerSelectedIndexChanged(object sender, EventArgs e)
     {
@@ -78,4 +75,18 @@ public partial class SharedTasks : ContentPage
             SelectedUser = (RegisteredUser)picker.ItemsSource[selectedIndex];
         }
     }
+    //public async void PrepareLists()
+    //{
+    //    var _RegisteredUserList = await GetAll();
+    //    RegisteredUserList.Clear();
+    //    RegisteredUserList = _RegisteredUserList.ToList();
+    //    foreach (RegisteredUser i in RegisteredUserList)
+    //    {
+    //        if (i.UserID == User.Uid)
+    //        {
+    //            RegisteredUserList.Remove(i);
+    //        }
+    //    }
+    //    picker.ItemsSource = RegisteredUserList;
+    //}
 }

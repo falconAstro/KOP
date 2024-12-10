@@ -1,26 +1,21 @@
 using Firebase.Database;
 using Firebase.Database.Query;
 using System.Collections.ObjectModel;
+using TimeManagementApp.Classes;
 
 namespace TimeManagementApp.Pages;
 
 public partial class SharedEvents : ContentPage
 {
-    private readonly FirebaseClient firebaseClient;
-    public class SharedEvent
-    {
-        public string Username { get; set; }
-        public required string Event { get; set; }
-        public required string Date { get; set; }
-        public string EventId {  get; set; }
-    }
+    private readonly FirebaseClient _firebaseClient;
+    
     public ObservableCollection<SharedEvent> SharedEventsList { get; set; } = [];
 
     public SharedEvents(FirebaseClient firebaseClient)
     {
         InitializeComponent();
         BindingContext = this;
-        this.firebaseClient = firebaseClient;
+        _firebaseClient = firebaseClient;
     }
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)
     {
@@ -30,7 +25,8 @@ public partial class SharedEvents : ContentPage
     }
     public async Task LoadEventsAsync()
     {
-        this.firebaseClient.Child("SharedEvent").AsObservable<SharedEvent>().Subscribe((item) =>
+        SharedEventsList.Clear();
+        _firebaseClient.Child("SharedEvent").AsObservable<SharedEvent>().Subscribe((item) =>
         {
             if (item.Object != null)
             {
@@ -38,9 +34,9 @@ public partial class SharedEvents : ContentPage
             }
         });
     }
-    private void BtnCreateSharedEvent_Clicked(object sender, EventArgs e)
+    private async void BtnCreateSharedEvent_Clicked(object sender, EventArgs e)
     {
-        this.firebaseClient.Child("SharedEvent").PostAsync(new SharedEvent
+        await _firebaseClient.Child("SharedEvent").PostAsync(new SharedEvent
         {
             Event = EntrySharedEvent.Text,
             Date = EntryDate.Text
@@ -49,5 +45,6 @@ public partial class SharedEvents : ContentPage
 
         EntrySharedEvent.Text = string.Empty;
         EntryDate.Text = string.Empty;
+        await Shell.Current.DisplayAlert("", "Event created", "OK");
     }
 }

@@ -6,11 +6,11 @@
     xmlns:local="clr-namespace:TimeManagementApp"
     xmlns:Pages="clr-namespace:TimeManagementApp.Pages"
     Shell.FlyoutBehavior="Flyout"
-    Title="TimeManagementApp">
+    Title="Time Management">
 
 
     
-    <!-- login a sign up stranky (treba fixnut viditelnost login stranky vo flyout menu)-->
+    <!-- login a sign up stranky -->
     
     <ShellContent Title="Log In" ContentTemplate="{DataTemplate Pages:LoginPage}" Route="LoginPage" Shell.FlyoutBehavior="Disabled" FlyoutItemIsVisible="False"/>
     <ShellContent Title="Sign Up" ContentTemplate="{DataTemplate Pages:SignUpPage}" Route="SignUpPage" Shell.FlyoutBehavior="Disabled" FlyoutItem.IsVisible="False"/>

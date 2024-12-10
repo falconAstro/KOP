@@ -1,10 +1,8 @@
 using Firebase.Auth;
 using Firebase.Database;
 using Firebase.Database.Query;
-using Microsoft.Maui.Storage;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Windows.Input;
+using TimeManagementApp.Classes;
 
 namespace TimeManagementApp.Pages;
 
@@ -13,14 +11,6 @@ public partial class PersonalTasks : ContentPage
     //Firebase clients
     private readonly FirebaseAuthClient _firebaseAuthClient;
     private readonly FirebaseClient _firebaseClient;
-
-    //Zadefinovanie PersonalTask classu
-    public class PersonalTask
-    {
-        public string Username { get; set; }
-        public required string Task { get; set; }
-        public string TaskID { get; set; }
-    }
     public ObservableCollection<PersonalTask> PersonalTaskList { get; set; } = []; //Zoznam Taskov nacitavanych z DB
     public User User { get; set; } //Premenna (neskor) obsahujuca aktualne prihlaseneho usera
 
@@ -64,11 +54,11 @@ public partial class PersonalTasks : ContentPage
         await Shell.Current.DisplayAlert("", "Task created", "OK");
     }
     //Odstranenie tasku aktualne nefunkcne
-    private async void DeletePersonalTask(string TaskId)
-    {
-        await _firebaseClient.Child("PersonalTask").Child(User.Uid).Child(TaskId).DeleteAsync();
-        await LoadTasksAsync();
-    }
+    //private async void DeletePersonalTask(string TaskId)
+    //{
+    //    await _firebaseClient.Child("PersonalTask").Child(User.Uid).Child(TaskId).DeleteAsync();
+    //    await LoadTasksAsync();
+    //}
 
     //new Command DeleteTask(string TaskId,bool taskDeleted)
     //{
@@ -76,6 +66,4 @@ public partial class PersonalTasks : ContentPage
     //    LoadTasksAsync();
         
     //}
-    
-   
 }

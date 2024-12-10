@@ -12,5 +12,16 @@
             x:Name="btnLogOut"  
             Clicked="BtnLogOut_Clicked" 
             Text="Log Out"/>
+        <CollectionView x:Name="CollectionView" ItemsSource="{Binding PickedUser}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <VerticalStackLayout>
+                        <Label Text="My Account Information:"/>
+                        <Label Text = "{Binding Username}"/>
+                        <Label Text = "{Binding Email}"/>
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
     </VerticalStackLayout>
 </ContentPage>
