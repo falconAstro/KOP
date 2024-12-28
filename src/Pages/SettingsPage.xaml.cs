@@ -23,7 +23,7 @@ public partial class SettingsPage : ContentPage
     {
         _firebaseClient.Child("RegisteredUsers").AsObservable<RegisteredUser>().Subscribe((item) =>
         {
-            if (item.Object != null && (item.Object.UserID == User.Uid))
+            if (item.Object != null && (item.Object.UserId == User.Uid))
             {
                 PickedUser=item.Object;
             }

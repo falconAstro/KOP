@@ -42,7 +42,7 @@ public partial class SignUpPage : ContentPage
                 User = _firebaseAuthClient.User;
 
                 //vytvorenie objektu registered user
-                await _firebaseClient.Child("RegisteredUsers").PostAsync(new RegisteredUser{ Username=EntryUsername.Text, UserID = User.Uid, Email=EntryEMail.Text });
+                await _firebaseClient.Child("RegisteredUsers").PostAsync(new RegisteredUser{ Username=EntryUsername.Text, UserId = User.Uid, Email=EntryEMail.Text });
                 //log out
                 _firebaseAuthClient.SignOut();
                 await Shell.Current.DisplayAlert("", "Signed up successfully", "OK");

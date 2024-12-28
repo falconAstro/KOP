@@ -24,10 +24,12 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <SwipeView>
-                        <Label Text ="{Binding Task}" x:Name="TaskLabel"/>
+                        <Grid Padding="1" RowSpacing="10" BackgroundColor="Black">
+                            <Label Text ="{Binding Task}" BackgroundColor="White" Padding="10"/>
+                        </Grid>
                         <SwipeView.RightItems>
                             <SwipeItems>
-                                <SwipeItem Text="Delete"></SwipeItem>
+                                <SwipeItem Text="Delete" Invoked="OnDeleteSwipeItemInvoked" BackgroundColor="Red" ></SwipeItem>
                             </SwipeItems>
                         </SwipeView.RightItems>
                     </SwipeView>

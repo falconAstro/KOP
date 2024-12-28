@@ -2,6 +2,7 @@ using Firebase.Auth;
 using Firebase.Database;
 using Firebase.Database.Query;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using TimeManagementApp.Classes;
 
 namespace TimeManagementApp.Pages;
@@ -38,7 +39,7 @@ public partial class PersonalTasks : ContentPage
         {
             if (item.Object != null)
             {
-                item.Object.TaskID = item.Key;
+                item.Object.TaskId = item.Key;
                 PersonalTaskList.Add(item.Object);
             }
         });
@@ -53,17 +54,24 @@ public partial class PersonalTasks : ContentPage
 
         await Shell.Current.DisplayAlert("", "Task created", "OK");
     }
-    //Odstranenie tasku aktualne nefunkcne
-    //private async void DeletePersonalTask(string TaskId)
-    //{
-    //    await _firebaseClient.Child("PersonalTask").Child(User.Uid).Child(TaskId).DeleteAsync();
-    //    await LoadTasksAsync();
-    //}
-
-    //new Command DeleteTask(string TaskId,bool taskDeleted)
-    //{
-    //    _firebaseClient.Child("PersonalTask").Child(User.Uid).Child(TaskId).DeleteAsync();
-    //    LoadTasksAsync();
-        
-    //}
+    private async void OnDeleteSwipeItemInvoked(object sender, EventArgs e)
+    {
+        if (sender is SwipeItem swipeItem)
+        {
+            var SwipeView = swipeItem.BindingContext as PersonalTask;
+            if (SwipeView == null)
+            {
+                await DisplayAlert("Error", "Failed to identify the item to delete.", "OK");
+            }
+            else
+            {
+                bool isDeletionConfirmed = await DisplayAlert("Delete Task", $"Are you sure you want to delete the task \"{SwipeView.Task}\"?", "Yes", "No");
+                if (isDeletionConfirmed)
+                {
+                    await _firebaseClient.Child("PersonalTask").Child(User.Uid).Child($"{SwipeView.TaskId}").DeleteAsync();
+                    await LoadTasksAsync();
+                }
+            }
+        }
+    }
 }

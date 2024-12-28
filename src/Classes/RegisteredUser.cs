@@ -9,14 +9,14 @@ namespace TimeManagementApp.Classes
     public class RegisteredUser
     {
         public required string Username { get; set; }
-        public required string UserID { get; set; }
+        public required string UserId { get; set; }
         public required string Email { get; set; }
     }
     public class PersonalTask
     {
         public string Username { get; set; }
         public required string Task { get; set; }
-        public string TaskID { get; set; }
+        public string TaskId { get; set; }
     }
     public class SharedTask
     {
@@ -26,7 +26,7 @@ namespace TimeManagementApp.Classes
     }
     public class SharedEvent
     {
-        public string Username { get; set; }
+        //public string Username { get; set; }
         public required string Event { get; set; }
         public required string Date { get; set; }
         public string EventId { get; set; }

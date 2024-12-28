@@ -1,3 +1,4 @@
+using Firebase.Auth;
 using Firebase.Database;
 using Firebase.Database.Query;
 using System.Collections.ObjectModel;
@@ -30,6 +31,7 @@ public partial class SharedEvents : ContentPage
         {
             if (item.Object != null)
             {
+                item.Object.EventId = item.Key;
                 SharedEventsList.Add(item.Object);
             }
         });
@@ -46,5 +48,25 @@ public partial class SharedEvents : ContentPage
         EntrySharedEvent.Text = string.Empty;
         EntryDate.Text = string.Empty;
         await Shell.Current.DisplayAlert("", "Event created", "OK");
+    }
+    private async void OnDeleteSwipeItemInvoked(object sender, EventArgs e)
+    {
+        if (sender is SwipeItem swipeItem)
+        {
+            var SwipeView = swipeItem.BindingContext as SharedEvent;
+            if (SwipeView == null)
+            {
+                await DisplayAlert("Error", "Failed to identify the item to delete.", "OK");
+            }
+            else
+            {
+                bool isDeletionConfirmed = await DisplayAlert("Delete Event", $"Are you sure you want to delete the event \"{SwipeView.Event}\"?", "Yes", "No");
+                if (isDeletionConfirmed)
+                {
+                    await _firebaseClient.Child("SharedEvent").Child($"{SwipeView.EventId}").DeleteAsync();
+                    await LoadEventsAsync();
+                }
+            }
+        }
     }
 }

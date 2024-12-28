@@ -25,10 +25,26 @@
         <CollectionView ItemsSource="{Binding SharedEventsList}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <VerticalStackLayout>
-                        <Label Grid.Column="1" Text ="{Binding Event}"/>
-                        <Label Grid.Column="2" Text ="{Binding Date}"/>
-                    </VerticalStackLayout>
+                    <SwipeView>
+                        <Grid Padding="1"  BackgroundColor="Black">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="60"/>
+                                <ColumnDefinition Width="340"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Text ="{Binding Event}" BackgroundColor="White" Padding="10" Grid.Row="0" Grid.ColumnSpan="2"/>
+                            <Label Text="Date:" BackgroundColor="White" Padding="10" Grid.Row="1" Grid.Column="0"/>
+                            <Label Text ="{Binding Date}" BackgroundColor="White" Padding="10" Grid.Row="1" Grid.Column="1"/>
+                        </Grid>
+                        <SwipeView.RightItems>
+                            <SwipeItems>
+                                <SwipeItem Text="Delete" Invoked="OnDeleteSwipeItemInvoked" BackgroundColor="Red" ></SwipeItem>
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                    </SwipeView>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>

@@ -12,8 +12,9 @@ public partial class SharedTasks : ContentPage
     private readonly FirebaseClient _firebaseClient;
     public List<RegisteredUser> RegisteredUserList { get; set; } = [];
     public ObservableCollection<SharedTask> SharedTaskList { get; set; } = [];
-    public User User { get; set; }
+    public User LoggedUser { get; set; }
     public RegisteredUser SelectedUser { get; set; }
+
     public SharedTasks(FirebaseClient firebaseClient, FirebaseAuthClient firebaseAuthClient)
 	{
 		InitializeComponent();
@@ -21,24 +22,24 @@ public partial class SharedTasks : ContentPage
         _firebaseAuthClient = firebaseAuthClient;
         _firebaseClient = firebaseClient;
     }
-    //Nacitanie taskov pri otvoreni stranky 
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)
     {
         base.OnNavigatedTo(args);
-        User = _firebaseAuthClient.User;
-
-        var _RegisteredUserList = await GetRegisteredUsers();
+        LoggedUser = _firebaseAuthClient.User;
+        //Nacitanie pouzivatelov do pickeru
+        var _RegisteredUserList = LoadRegisteredUsersAsync();
         RegisteredUserList.Clear();
-        RegisteredUserList = _RegisteredUserList.ToList();
+        RegisteredUserList = await _RegisteredUserList;
+        RemoveLoggedUserFromList();
         picker.ItemsSource = RegisteredUserList;
-
+        //Nacitanie taskov pri otvoreni stranky 
         await LoadSharedTasksAsync();
     }
     //Funkcia nacitania taskov z databazy
     public async Task LoadSharedTasksAsync()
     {
         SharedTaskList.Clear();
-        _firebaseClient.Child("SharedTask").Child(User.Uid).AsObservable<SharedTask>().Subscribe((item) =>
+        _firebaseClient.Child("SharedTask").Child(LoggedUser.Uid).AsObservable<SharedTask>().Subscribe((item) =>
         {
             if (item.Object != null)
             {
@@ -47,18 +48,18 @@ public partial class SharedTasks : ContentPage
             }
         });
     }
-    public async Task<List<RegisteredUser>> GetRegisteredUsers()
+    public async Task<List<RegisteredUser>> LoadRegisteredUsersAsync()
     {
         return (await _firebaseClient.Child("RegisteredUsers").OnceAsync<RegisteredUser>()).Select(item => new RegisteredUser
         {
             Username = item.Object.Username,
-            UserID = item.Object.UserID,
+            UserId = item.Object.UserId,
             Email = item.Object.Email,
         }).ToList();
     }
     private async void BtnCreateSharedTask_Clicked(object sender, EventArgs e)
     {
-        await _firebaseClient.Child("SharedTask").Child(SelectedUser.UserID).PostAsync(new SharedTask { Task = EntrySharedTask.Text,Username = User.Uid });
+        await _firebaseClient.Child("SharedTask").Child(SelectedUser.UserId).PostAsync(new SharedTask { Task = EntrySharedTask.Text,Username = LoggedUser.Uid });
 
         EntrySharedTask.Text = string.Empty;
         picker.SelectedItem = null;
@@ -75,18 +76,35 @@ public partial class SharedTasks : ContentPage
             SelectedUser = (RegisteredUser)picker.ItemsSource[selectedIndex];
         }
     }
-    //public async void PrepareLists()
-    //{
-    //    var _RegisteredUserList = await GetAll();
-    //    RegisteredUserList.Clear();
-    //    RegisteredUserList = _RegisteredUserList.ToList();
-    //    foreach (RegisteredUser i in RegisteredUserList)
-    //    {
-    //        if (i.UserID == User.Uid)
-    //        {
-    //            RegisteredUserList.Remove(i);
-    //        }
-    //    }
-    //    picker.ItemsSource = RegisteredUserList;
-    //}
+    public void RemoveLoggedUserFromList()
+    {
+        foreach (RegisteredUser ListUser in RegisteredUserList)
+        {
+            if (ListUser.UserId == LoggedUser.Uid)
+            {
+                RegisteredUserList.Remove(ListUser);
+                break;
+            }
+        }
+    }
+    private async void OnDeleteSwipeItemInvoked(object sender, EventArgs e)
+    {
+        if (sender is SwipeItem swipeItem)
+        {
+            var SwipeView = swipeItem.BindingContext as SharedTask;
+            if (SwipeView == null)
+            {
+                await DisplayAlert("Error", "Failed to identify the item to delete.", "OK");
+            }
+            else
+            {
+                bool isDeletionConfirmed = await DisplayAlert("Delete Task", $"Are you sure you want to delete the task \"{SwipeView.Task}\"?", "Yes", "No");
+                if (isDeletionConfirmed)
+                {
+                    await _firebaseClient.Child("SharedTask").Child(LoggedUser.Uid).Child($"{SwipeView.TaskId}").DeleteAsync();
+                    await LoadSharedTasksAsync();
+                }
+            }
+        }
+    }
 }

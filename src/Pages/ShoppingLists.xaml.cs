@@ -10,7 +10,7 @@ public partial class ShoppingLists : ContentPage
 {
     private readonly FirebaseAuthClient _firebaseAuthClient;
     private readonly FirebaseClient _firebaseClient;
-    public User User { get; set; }
+    public User LoggedUser { get; set; }
     public RegisteredUser SelectedUser { get; set; }
     public ObservableCollection<ShoppingList> ShoppingListList { get; set; } = [];
     public List<RegisteredUser> RegisteredUserList { get; set; } = [];
@@ -25,20 +25,21 @@ public partial class ShoppingLists : ContentPage
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)
     {
         base.OnNavigatedTo(args);
-        User = _firebaseAuthClient.User;
-
-        var _RegisteredUserList = await GetRegisteredUsers();
+        LoggedUser = _firebaseAuthClient.User;
+        //Nacitanie pouzivatelov do pickeru
+        var _RegisteredUserList = LoadRegisteredUsersAsync();
         RegisteredUserList.Clear();
-        RegisteredUserList = _RegisteredUserList.ToList();
+        RegisteredUserList = await _RegisteredUserList;
+        RemoveLoggedUserFromList();
         picker.ItemsSource = RegisteredUserList;
-
+        //Nacitanie taskov pri otvoreni stranky 
         await LoadShoppingListsAsync();
     }
     //Funkcia nacitania listov z databazy
     public async Task LoadShoppingListsAsync()
     {
         ShoppingListList.Clear();
-        _firebaseClient.Child("ShoppingList").Child(User.Uid).AsObservable<ShoppingList>().Subscribe((item) =>
+        _firebaseClient.Child("ShoppingList").Child(LoggedUser.Uid).AsObservable<ShoppingList>().Subscribe((item) =>
         {
             if (item.Object != null)
             {
@@ -47,18 +48,18 @@ public partial class ShoppingLists : ContentPage
             }
         });
     }
-    public async Task<List<RegisteredUser>> GetRegisteredUsers()
+    public async Task<List<RegisteredUser>> LoadRegisteredUsersAsync()
     {
         return (await _firebaseClient.Child("RegisteredUsers").OnceAsync<RegisteredUser>()).Select(item => new RegisteredUser
         {
             Username = item.Object.Username,
-            UserID = item.Object.UserID,
+            UserId = item.Object.UserId,
             Email = item.Object.Email,
         }).ToList();
     }
     private async void BtnCreateShoppingList_Clicked(object sender, EventArgs e)
     {
-        await _firebaseClient.Child("ShoppingList").Child(SelectedUser.UserID).PostAsync(new ShoppingList { ShoppingItems = EntryShoppingItems.Text, Username = User.Uid });
+        await _firebaseClient.Child("ShoppingList").Child(SelectedUser.UserId).PostAsync(new ShoppingList { ShoppingItems = EntryShoppingItems.Text, Username = LoggedUser.Uid });
 
         EntryShoppingItems.Text = string.Empty;
         picker.SelectedItem = null;
@@ -73,6 +74,37 @@ public partial class ShoppingLists : ContentPage
         if (selectedIndex != -1)
         {
             SelectedUser = (RegisteredUser)picker.ItemsSource[selectedIndex];
+        }
+    }
+    public void RemoveLoggedUserFromList()
+    {
+        foreach (RegisteredUser ListUser in RegisteredUserList)
+        {
+            if (ListUser.UserId == LoggedUser.Uid)
+            {
+                RegisteredUserList.Remove(ListUser);
+                break;
+            }
+        }
+    }
+    private async void OnDeleteSwipeItemInvoked(object sender, EventArgs e)
+    {
+        if (sender is SwipeItem swipeItem)
+        {
+            var SwipeView = swipeItem.BindingContext as ShoppingList;
+            if (SwipeView == null)
+            {
+                await DisplayAlert("Error", "Failed to identify the item to delete.", "OK");
+            }
+            else
+            {
+                bool isDeletionConfirmed = await DisplayAlert("Delete Shopping List", $"Are you sure you want to delete this shopping list?", "Yes", "No");
+                if (isDeletionConfirmed)
+                {
+                    await _firebaseClient.Child("ShoppingList").Child(LoggedUser.Uid).Child($"{SwipeView.ListId}").DeleteAsync();
+                    await LoadShoppingListsAsync();
+                }
+            }
         }
     }
 }

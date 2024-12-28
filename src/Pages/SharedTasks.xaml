@@ -21,13 +21,30 @@
             Clicked="BtnCreateSharedTask_Clicked" 
             Text="Create Task"/>
 
-        <CollectionView ItemsSource="{Binding SharedTaskList}">
+        <CollectionView ItemsSource="{Binding SharedTaskList}"
+                        Header="My tasks">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <VerticalStackLayout>
-                        <Label Text = "{Binding Task}"/>
-                        <Label Text = "{Binding Username}"/>
-                    </VerticalStackLayout>
+                    <SwipeView>
+                        <Grid Padding="1"  BackgroundColor="Black">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="60"/>
+                                <ColumnDefinition Width="340"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Text = "{Binding Task}" BackgroundColor="White" Padding="10" Grid.Row="0" Grid.ColumnSpan="2"/>
+                            <Label Text="From:" BackgroundColor="White" Padding="10" Grid.Row="1" Grid.Column="0"/>
+                            <Label Text = "{Binding Username}" BackgroundColor="White" Padding="10" Grid.Row="1" Grid.Column="1"/>
+                        </Grid>
+                        <SwipeView.RightItems>
+                            <SwipeItems>
+                                <SwipeItem Text="Delete" Invoked="OnDeleteSwipeItemInvoked" BackgroundColor="Red" ></SwipeItem>
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                    </SwipeView>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
