@@ -20,7 +20,11 @@ public partial class SharedTasks : ContentPage
 		InitializeComponent();
         BindingContext = this;
         _firebaseAuthClient = firebaseAuthClient;
-        _firebaseClient = firebaseClient;
+        _firebaseClient = firebaseClient = new FirebaseClient("https://timemanagement-4d83d-default-rtdb.firebaseio.com/",
+        new FirebaseOptions()
+        {
+            AuthTokenAsyncFactory = () => _firebaseAuthClient.User.GetIdTokenAsync()
+        });
     }
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)
     {

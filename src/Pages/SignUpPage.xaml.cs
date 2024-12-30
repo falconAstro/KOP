@@ -15,7 +15,11 @@ public partial class SignUpPage : ContentPage
 	{
 		InitializeComponent();
         _firebaseAuthClient = firebaseAuthClient;
-        _firebaseClient = firebaseClient;
+        _firebaseClient = firebaseClient = new FirebaseClient("https://timemanagement-4d83d-default-rtdb.firebaseio.com/",
+        new FirebaseOptions()
+        {
+            AuthTokenAsyncFactory = () => _firebaseAuthClient.User.GetIdTokenAsync()
+        });
     }
     //Vymazanie Entry pri nacitani
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)

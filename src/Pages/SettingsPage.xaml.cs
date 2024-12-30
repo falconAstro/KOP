@@ -17,7 +17,11 @@ public partial class SettingsPage : ContentPage
 		InitializeComponent();
         BindingContext = this;
         _firebaseAuthClient = firebaseAuthClient;
-        _firebaseClient = firebaseClient;
+        _firebaseClient = firebaseClient = new FirebaseClient("https://timemanagement-4d83d-default-rtdb.firebaseio.com/",
+        new FirebaseOptions()
+        {
+            AuthTokenAsyncFactory = () => _firebaseAuthClient.User.GetIdTokenAsync()
+        });
     }
     public async Task LoadMyData()
     {

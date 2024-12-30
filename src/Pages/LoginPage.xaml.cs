@@ -1,15 +1,22 @@
 using Firebase.Auth;
+using Firebase.Database;
 
 namespace TimeManagementApp.Pages;
 
 public partial class LoginPage : ContentPage
 {
     private readonly FirebaseAuthClient _firebaseAuthClient;
-    public LoginPage(FirebaseAuthClient firebaseAuthClient)
+    private readonly FirebaseClient _firebaseClient;
+    public LoginPage(FirebaseAuthClient firebaseAuthClient, FirebaseClient firebaseClient)
 	{
 		InitializeComponent();
         _firebaseAuthClient = firebaseAuthClient;
-	}
+        _firebaseClient = firebaseClient = new FirebaseClient("https://timemanagement-4d83d-default-rtdb.firebaseio.com/",
+        new FirebaseOptions()
+        {
+                AuthTokenAsyncFactory = () => _firebaseAuthClient.User.GetIdTokenAsync()
+            });
+    }
 
 	//Vymazanie Entry pri nacitani
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)

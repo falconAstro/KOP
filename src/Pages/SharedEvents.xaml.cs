@@ -9,14 +9,19 @@ namespace TimeManagementApp.Pages;
 public partial class SharedEvents : ContentPage
 {
     private readonly FirebaseClient _firebaseClient;
-    
+    private readonly FirebaseAuthClient _firebaseAuthClient;
     public ObservableCollection<SharedEvent> SharedEventsList { get; set; } = [];
 
-    public SharedEvents(FirebaseClient firebaseClient)
+    public SharedEvents(FirebaseClient firebaseClient, FirebaseAuthClient firebaseAuthClient)
     {
         InitializeComponent();
         BindingContext = this;
-        _firebaseClient = firebaseClient;
+        _firebaseAuthClient = firebaseAuthClient;
+        _firebaseClient = firebaseClient = new FirebaseClient("https://timemanagement-4d83d-default-rtdb.firebaseio.com/",
+        new FirebaseOptions()
+        {
+            AuthTokenAsyncFactory = () => _firebaseAuthClient.User.GetIdTokenAsync()
+        });
     }
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)
     {

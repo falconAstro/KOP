@@ -4,7 +4,6 @@ using Firebase.Database.Query;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using TimeManagementApp.Classes;
-
 namespace TimeManagementApp.Pages;
 
 public partial class PersonalTasks : ContentPage
@@ -21,7 +20,11 @@ public partial class PersonalTasks : ContentPage
 		InitializeComponent();
         BindingContext = this;
         _firebaseAuthClient = firebaseAuthClient;
-        _firebaseClient = firebaseClient;
+        _firebaseClient = firebaseClient = new FirebaseClient("https://timemanagement-4d83d-default-rtdb.firebaseio.com/",
+            new FirebaseOptions()
+            {
+                AuthTokenAsyncFactory = () => _firebaseAuthClient.User.GetIdTokenAsync()
+            });
     }
 
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)
