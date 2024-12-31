@@ -1,21 +1,22 @@
+using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
 using Firebase.Auth;
 using Firebase.Database;
 using Firebase.Database.Query;
-using System.Collections.ObjectModel;
 using TimeManagementApp.Classes;
 
 namespace TimeManagementApp.Pages;
 
 public partial class SettingsPage : ContentPage
 {
-    private readonly FirebaseAuthClient _firebaseAuthClient;
-    private readonly FirebaseClient _firebaseClient;
-    public User User { get; set; }
-    public RegisteredUser PickedUser { get; set; }
-    public SettingsPage(FirebaseAuthClient firebaseAuthClient, FirebaseClient firebaseClient)
+    private FirebaseAuthClient _firebaseAuthClient;
+    private FirebaseClient _firebaseClient;
+    private User User { get; set; }
+    private RegisteredUser PickedUser { get; set; }
+    public SettingsPage(FirebaseAuthClient firebaseAuthClient,FirebaseClient firebaseClient)
 	{
 		InitializeComponent();
-        BindingContext = this;
+        
         _firebaseAuthClient = firebaseAuthClient;
         _firebaseClient = firebaseClient = new FirebaseClient("https://timemanagement-4d83d-default-rtdb.firebaseio.com/",
         new FirebaseOptions()
@@ -23,34 +24,57 @@ public partial class SettingsPage : ContentPage
             AuthTokenAsyncFactory = () => _firebaseAuthClient.User.GetIdTokenAsync()
         });
     }
-    public async Task LoadMyData()
+    public async Task LoadRegisteredUsersAsync()
     {
-        _firebaseClient.Child("RegisteredUsers").AsObservable<RegisteredUser>().Subscribe((item) =>
-        {
-            if (item.Object != null && (item.Object.UserId == User.Uid))
-            {
-                PickedUser=item.Object;
-            }
-        });
+        var LoadUsers = await _firebaseClient.Child("RegisteredUsers").OrderBy("UserID").EqualTo(User.Uid).OnceAsync<RegisteredUser>();
+        var LoadedUser = LoadUsers.FirstOrDefault();
+        PickedUser = LoadedUser.Object;
+        UsernameLabel.Text = PickedUser.Username;
+        EmailLabel.Text = PickedUser.Email;
+        IdLabel.Text = PickedUser.UserId;
     }
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)
     {
-        base.OnNavigatedTo(args);
-        User = _firebaseAuthClient.User;
-        //await LoadMyData();
-        //CollectionView.ItemsSource = (System.Collections.IEnumerable)PickedUser;
+        try 
+        {
+            base.OnNavigatedTo(args);
+            User = _firebaseAuthClient.User;
+            await LoadRegisteredUsersAsync();
+            await Toast.Make("Loaded data successfully", ToastDuration.Long).Show();
+        }
+        catch (FirebaseException) 
+        {
+            await Toast.Make("Firebase error", ToastDuration.Short).Show();
+        }
+        catch (Exception) 
+        {
+            await Toast.Make("Error", ToastDuration.Short).Show();
+        }
+    }
+    private async Task LogOut()
+    {
+        try
+        {
+            bool isSignOutConfirmed = await DisplayAlert("Sign out", $"Are you sure you want to sign out?", "Yes", "No");
+            if (isSignOutConfirmed) 
+            {
+                _firebaseAuthClient.SignOut();
+                await Toast.Make("User signed out succesfully", ToastDuration.Long).Show();
+                await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
+            }
+        }
+        catch (FirebaseAuthException)
+        {
+            await Toast.Make("Firebase Auth Error", ToastDuration.Long).Show();
+        }
+        catch (Exception)
+        {
+            await Toast.Make("Error", ToastDuration.Long).Show();
+        }
     }
     private void BtnLogOut_Clicked (object sender, EventArgs e)
 	{
-        try
-        {
-            _firebaseAuthClient.SignOut();
-            Shell.Current.DisplayAlert("", "User successfully signed out", "OK");
-            Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
-        }
-        catch (Exception ex)
-        {
-            Shell.Current.DisplayAlert("", "Error", "OK");
-        }
+
+        LogOut();
     }
 }

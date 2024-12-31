@@ -6,27 +6,35 @@
     <VerticalStackLayout>
         <Label 
             Text="Please Log In to proceed!" 
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+            FontSize="16"
+            FontAttributes="Bold"
+            Margin="5,0,5,3" />
         <Label 
-            Text="E-mail:"/>
+            Text="E-mail:"
+            Margin="5,0,5,0"/>
         <Entry 
             x:Name="EntryEMail" 
-            Placeholder="Enter your e-mail" />
+            Placeholder="Enter your e-mail"
+            Margin="5,0,5,3"/>
         <Label 
-            Text="Password:"/>
+            Text="Password:"
+            Margin="5,0,5,0"/>
         <Entry 
             x:Name="EntryPassword" 
-            Placeholder="Enter your Password"/>
+            Placeholder="Enter your Password"
+            Margin="5,0,5,0"/>
         <Button 
             x:Name="btnLogIn"  
             Clicked="BtnLogIn_Clicked" 
-            Text="Log In"/>
+            Text="Log In"
+            Margin="5,3,5,0"/>
         <Label 
-            Text="Don't have an account?"/>
+            Text="Don't have an account?"
+            Margin="5,30,5,3"/>
         <Button 
             x:Name="btnGoToSignUpPage" 
             Clicked="BtnGoToSignUpPage_Clicked" 
-            Text="Sign Up!"/>
+            Text="Sign Up"
+            Margin="5,0,5,0"/>
     </VerticalStackLayout>
 </ContentPage>

@@ -1,3 +1,5 @@
+using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
 using Firebase.Auth;
 using Firebase.Database;
 
@@ -5,8 +7,8 @@ namespace TimeManagementApp.Pages;
 
 public partial class LoginPage : ContentPage
 {
-    private readonly FirebaseAuthClient _firebaseAuthClient;
-    private readonly FirebaseClient _firebaseClient;
+    private FirebaseAuthClient _firebaseAuthClient;
+    private FirebaseClient _firebaseClient;
     public LoginPage(FirebaseAuthClient firebaseAuthClient, FirebaseClient firebaseClient)
 	{
 		InitializeComponent();
@@ -32,19 +34,19 @@ public partial class LoginPage : ContentPage
         {
             //Prihlasenie
             var credentials = await _firebaseAuthClient.SignInWithEmailAndPasswordAsync(email: EntryEMail.Text, password: EntryPassword.Text);
-            await Shell.Current.DisplayAlert("", "Signed in successfully", "OK");
+            await Toast.Make("Signed in succesfully", ToastDuration.Long).Show();
             //Otvorenie taskov
             await Shell.Current.GoToAsync($"//{nameof(PersonalTasks)}");
         }
         //Errory spojene s Firebase Auth systemom (nespravny email, atd)
-        catch (FirebaseAuthException ex)
+        catch (FirebaseAuthException)
         {
-            await Shell.Current.DisplayAlert("", "Firebase error", "OK");
+            await Toast.Make("Firebase Error", ToastDuration.Long).Show();
         }
         //Ostatne errory
-        catch (Exception ex)
+        catch (Exception)
         {
-            await Shell.Current.DisplayAlert("", "Error", "OK");
+            await Toast.Make("Error", ToastDuration.Long).Show();
         }
         
 	}

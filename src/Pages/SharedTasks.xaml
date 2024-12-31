@@ -5,24 +5,32 @@
     <VerticalStackLayout>
         <Label 
             Text="Create a new shared task" 
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-        <Entry 
-            x:Name="EntrySharedTask" 
-            Placeholder="Enter the new task" />
+            FontSize="16"
+            FontAttributes="Bold"
+            Margin="5" />
         <Picker 
             x:Name="picker"
             Title="Select a target user"
+            Margin="5"
             ItemsSource ="{Binding RegisteredUserList}"
             ItemDisplayBinding="{Binding Username}"
             SelectedItem="{Binding SelectedUser}"/>
+        <Entry 
+            x:Name="EntrySharedTask" 
+            Placeholder="Enter a new task"
+            Margin="5"/>
         <Button 
             x:Name="BtnCreateSharedTask"  
             Clicked="BtnCreateSharedTask_Clicked" 
-            Text="Create Task"/>
+            Text="Create Task"
+            Margin="5"/>
+        <Label
+            Text="My current tasks"
+            FontSize="16"
+            FontAttributes="Bold"
+            Margin="5"/>
 
-        <CollectionView ItemsSource="{Binding SharedTaskList}"
-                        Header="My tasks">
+        <CollectionView ItemsSource="{Binding SharedTaskList}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <SwipeView>
@@ -35,9 +43,9 @@
                                 <ColumnDefinition Width="60"/>
                                 <ColumnDefinition Width="340"/>
                             </Grid.ColumnDefinitions>
-                            <Label Text = "{Binding Task}" BackgroundColor="White" Padding="10" Grid.Row="0" Grid.ColumnSpan="2"/>
-                            <Label Text="From:" BackgroundColor="White" Padding="10" Grid.Row="1" Grid.Column="0"/>
-                            <Label Text = "{Binding Username}" BackgroundColor="White" Padding="10" Grid.Row="1" Grid.Column="1"/>
+                            <Label Text="From:" BackgroundColor="White" Padding="10" Grid.Row="0" Grid.Column="0"/>
+                            <Label Text = "{Binding Username}" BackgroundColor="White" Padding="10" Grid.Row="0" Grid.Column="1" FontAttributes="Italic"/>
+                            <Label Text = "{Binding Task}" BackgroundColor="White" Padding="10" Grid.Row="1" Grid.ColumnSpan="2" FontAttributes="Bold"/>
                         </Grid>
                         <SwipeView.RightItems>
                             <SwipeItems>

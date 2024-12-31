@@ -6,21 +6,27 @@
     <VerticalStackLayout>
         <Label 
             Text="Create a new shared event" 
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-        <Entry 
-            x:Name="EntrySharedEvent" 
-            Placeholder="Enter the new event" />
+            FontSize="16"
+            FontAttributes="Bold"
+            Margin="5"/>
         <Entry 
             x:Name="EntryDate" 
-            Placeholder="Enter date YYYY/MM/DD" />
+            Placeholder="Enter date"
+            Margin="5"/>
+        <Entry 
+            x:Name="EntrySharedEvent" 
+            Placeholder="Enter a new event"
+            Margin="5"/>
         <Button 
             x:Name="BtnCreateSharedEvent"  
             Clicked="BtnCreateSharedEvent_Clicked" 
-            Text="Create Event"/>
+            Text="Create Event"
+            Margin="5"/>
         <Label
             Text="Current events"
-            HorizontalOptions="Center" />
+            FontSize="16"
+            FontAttributes="Bold"
+            Margin="5"/>
         
         <CollectionView ItemsSource="{Binding SharedEventsList}">
             <CollectionView.ItemTemplate>

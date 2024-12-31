@@ -5,19 +5,24 @@
              Title="Personal Tasks">
     <VerticalStackLayout>
         <Label 
-            Text="Create a new personal task" 
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+            Text="Create a new personal task"
+            FontSize="16"
+            FontAttributes="Bold"
+            Margin="5" />
         <Entry 
             x:Name="EntryPersonalTask" 
-            Placeholder="Enter the new task" />
+            Placeholder="Enter the new task"
+            Margin="5"/>
         <Button 
             x:Name="BtnCreatePersonalTask"  
             Clicked="BtnCreatePersonalTask_Clicked" 
-            Text="Create Task"/>
+            Text="Create Task"
+            Margin="5"/>
         <Label
-            Text="Current tasks"
-            HorizontalOptions="Center" />
+            Text="My current personal tasks"
+            FontSize="16"
+            FontAttributes="Bold"
+            Margin="5"/>
         <!-- zobrazenie zoznamu taskov nacitanych z databazy-->
 
         <CollectionView ItemsSource="{Binding PersonalTaskList}">

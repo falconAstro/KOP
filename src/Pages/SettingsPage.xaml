@@ -4,24 +4,23 @@
              x:Class="TimeManagementApp.Pages.SettingsPage"
              Title="Settings">
     <VerticalStackLayout>
-        <Label 
-            Text="Log out"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+        <Label Text="My account details:"
+               FontSize="16"
+               FontAttributes="Bold"
+               Margin="5"/>
+        <Label x:Name="UsernameLabel" Margin="5"/>
+        <Label x:Name="IdLabel" Margin="5"/>
+        <Label x:Name="EmailLabel" Margin="5"/>
         <Button 
             x:Name="btnLogOut"  
             Clicked="BtnLogOut_Clicked" 
-            Text="Log Out"/>
-        <CollectionView x:Name="CollectionView" ItemsSource="{Binding PickedUser}">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <VerticalStackLayout>
-                        <Label Text="My Account Information:"/>
-                        <Label Text = "{Binding Username}"/>
-                        <Label Text = "{Binding Email}"/>
-                    </VerticalStackLayout>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+            Text="Log Out"
+            Margin="6"/>
+        <Label Text="App information"
+               FontSize="16"
+               FontAttributes="Bold"
+               Margin="5"/>
+        <Label Text="Alpha 1.1"
+               Margin="5"/>
     </VerticalStackLayout>
 </ContentPage>

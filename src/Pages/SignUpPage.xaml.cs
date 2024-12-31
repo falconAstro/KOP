@@ -1,3 +1,5 @@
+using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
 using Firebase.Auth;
 using Firebase.Database;
 using Firebase.Database.Query;
@@ -7,10 +9,10 @@ namespace TimeManagementApp.Pages;
 
 public partial class SignUpPage : ContentPage
 {
-    private readonly FirebaseAuthClient _firebaseAuthClient;
-    private readonly FirebaseClient _firebaseClient;
+    private FirebaseAuthClient _firebaseAuthClient;
+    private FirebaseClient _firebaseClient;
 
-    public User User { get; set; }
+    private User User { get; set; }
     public SignUpPage(FirebaseAuthClient firebaseAuthClient, FirebaseClient firebaseClient)
 	{
 		InitializeComponent();
@@ -49,24 +51,24 @@ public partial class SignUpPage : ContentPage
                 await _firebaseClient.Child("RegisteredUsers").PostAsync(new RegisteredUser{ Username=EntryUsername.Text, UserId = User.Uid, Email=EntryEMail.Text });
                 //log out
                 _firebaseAuthClient.SignOut();
-                await Shell.Current.DisplayAlert("", "Signed up successfully", "OK");
+                await Toast.Make("Signed up succesfully", ToastDuration.Long).Show();
                 //Navrat na Log In page
                 await Shell.Current.GoToAsync("..");
             }
             else
             {
-                await Shell.Current.DisplayAlert("", "Passwords do not match!", "OK");
+                await Toast.Make("Passwords do not match!", ToastDuration.Long).Show();
             }
         }
         //Errory spojene s Firebase Auth systemom (nespravny email, atd)
-        catch (FirebaseAuthException ex)
+        catch (FirebaseAuthException)
         {
-            await Shell.Current.DisplayAlert("", "Firebase Error", "OK");
+            await Toast.Make("Firebase Error", ToastDuration.Long).Show();
         }
         //Ostatne errory
-        catch (Exception ex)
+        catch (Exception)
         {
-            await Shell.Current.DisplayAlert("", "Error", "OK");
+            await Toast.Make("Error", ToastDuration.Long).Show();
         }
     }
     //Vytvorenie usera a vymazanie Entry obsahu

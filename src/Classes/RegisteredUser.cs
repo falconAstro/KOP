@@ -34,7 +34,8 @@ namespace TimeManagementApp.Classes
     public class ShoppingList
     {
         public string Username { get; set; }
-        public string ShoppingItems { get; set; }
+        public List<string> ShoppingItems { get; set; }
         public string ListId { get; set; }
+        public string Date { get; set; }
     }
 }

@@ -5,21 +5,35 @@
     <VerticalStackLayout>
         <Label 
             Text="Create a new shopping list" 
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-        <Editor 
-            x:Name="EntryShoppingItems" 
-            Placeholder="Enter shopping items" />
+            FontSize="16"
+            FontAttributes="Bold"
+            Margin="5"/>
         <Picker 
             x:Name="picker"
             Title="Select a target user"
+            Margin="5"
             ItemsSource ="{Binding RegisteredUserList}"
             ItemDisplayBinding="{Binding Username}"
             SelectedItem="{Binding SelectedUser}"/>
+        <Entry 
+            x:Name="EntryShoppingItem" 
+            Placeholder="Enter shopping item"
+            Margin="5"/>
+        <Button 
+            x:Name="BtnAddShoppingItem"  
+            Clicked="BtnAddShoppingItem_Clicked" 
+            Text="Add item to shopping list"
+            Margin="5"/>
         <Button 
             x:Name="BtnCreateShoppingList"  
             Clicked="BtnCreateShoppingList_Clicked" 
-            Text="Create shopping list"/>
+            Text="Create shopping list"
+            Margin="5"/>
+        <Label
+            Text="My current shopping lists"
+            FontSize="16"
+            FontAttributes="Bold"
+            Margin="5"/>
 
         <CollectionView ItemsSource="{Binding ShoppingListList}">
             <CollectionView.ItemTemplate>
@@ -29,14 +43,22 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="60"/>
                                 <ColumnDefinition Width="340"/>
                             </Grid.ColumnDefinitions>
-                            <Label Text = "{Binding ShoppingItems}" BackgroundColor="White" Padding="10" Grid.Row="0" Grid.ColumnSpan="2"/>
-                            <Label Text="From:" BackgroundColor="White" Padding="10" Grid.Row="1" Grid.Column="0"/>
-                            <Label Text = "{Binding Username}" BackgroundColor="White" Padding="10" Grid.Row="1" Grid.Column="1"/>
+                            <Label Text = "{Binding Date}" BackgroundColor="White" Padding="10" Grid.Row="0" Grid.ColumnSpan="2" FontAttributes="Bold"/>
+                            <Label Text="From:" BackgroundColor="White" Padding="10" Grid.Row="1" Grid.Column="0" FontAttributes="Bold"/>
+                            <Label Text = "{Binding Username}" BackgroundColor="White" Padding="10" Grid.Row="1" Grid.Column="1" FontAttributes="Italic"/>
+                            <CollectionView ItemsSource="{Binding ShoppingItems}" Grid.ColumnSpan="2" Grid.Row="2">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Label Text = "{Binding .}" BackgroundColor="White" Padding="4"/>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
                         </Grid>
                         <SwipeView.RightItems>
                             <SwipeItems>
