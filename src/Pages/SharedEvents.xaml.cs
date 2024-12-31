@@ -1,3 +1,5 @@
+using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
 using Firebase.Auth;
 using Firebase.Database;
 using Firebase.Database.Query;
@@ -10,6 +12,8 @@ public partial class SharedEvents : ContentPage
 {
     private readonly FirebaseClient _firebaseClient;
     private readonly FirebaseAuthClient _firebaseAuthClient;
+    private DateTime DateNow;
+    private List<SharedEvent> TempSharedEventsList { get; set; } = [];
     public ObservableCollection<SharedEvent> SharedEventsList { get; set; } = [];
 
     public SharedEvents(FirebaseClient firebaseClient, FirebaseAuthClient firebaseAuthClient)
@@ -25,53 +29,98 @@ public partial class SharedEvents : ContentPage
     }
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)
     {
-        base.OnNavigatedTo(args);
-        SharedEventsList.Clear();
-        await LoadEventsAsync();
+        try
+        {
+            base.OnNavigatedTo(args);
+            DateNow = DateTime.Now;
+            SharedEventsList.Clear();
+            await LoadEventsAsync();
+        }
+        catch (FirebaseException)
+        {
+            await Toast.Make("Firebase Error", ToastDuration.Short).Show();
+        }
+        catch (Exception)
+        {
+            await Toast.Make("Error", ToastDuration.Short).Show();
+        }
     }
     public async Task LoadEventsAsync()
     {
+        EventDatePicker.Date = DateNow;
+        EventDatePicker.MinimumDate = DateNow;
         SharedEventsList.Clear();
-        _firebaseClient.Child("SharedEvent").AsObservable<SharedEvent>().Subscribe((item) =>
+        TempSharedEventsList.Clear();
+        var LoadedEvents = await _firebaseClient.Child("SharedEvent").OnceAsync<SharedEvent>();
+        foreach(var _event in LoadedEvents)
         {
-            if (item.Object != null)
+            var SharedEvent = _event.Object;
+            SharedEvent.EventId = _event.Key;
+            TempSharedEventsList.Add(SharedEvent);
+        }
+        var SortedEvents = TempSharedEventsList.OrderBy(SharedEvent => SharedEvent.Date);
+        foreach (var _event in SortedEvents)
+        {
+            SharedEventsList.Add(_event);
+        }
+        await Toast.Make("Loaded data successfully", ToastDuration.Short).Show();
+    }
+    private async Task CreateEventAsync()
+    {
+        try
+        {
+            await _firebaseClient.Child("SharedEvent").PostAsync(new SharedEvent
             {
-                item.Object.EventId = item.Key;
-                SharedEventsList.Add(item.Object);
-            }
-        });
+                Event = EntrySharedEvent.Text,
+                Date = EventDatePicker.Date
+            });
+            EntrySharedEvent.Text = string.Empty;
+            await Toast.Make("Event created successfully", ToastDuration.Long).Show();
+            await LoadEventsAsync();
+        }
+        catch (FirebaseException)
+        {
+            await Toast.Make("Firebase Error", ToastDuration.Short).Show();
+        }
+        catch (Exception)
+        {
+            await Toast.Make("Error", ToastDuration.Short).Show();
+        }
     }
     private async void BtnCreateSharedEvent_Clicked(object sender, EventArgs e)
     {
-        await _firebaseClient.Child("SharedEvent").PostAsync(new SharedEvent
-        {
-            Event = EntrySharedEvent.Text,
-            Date = EntryDate.Text
-
-        });
-
-        EntrySharedEvent.Text = string.Empty;
-        EntryDate.Text = string.Empty;
-        await Shell.Current.DisplayAlert("", "Event created", "OK");
+        await CreateEventAsync();
     }
     private async void OnDeleteSwipeItemInvoked(object sender, EventArgs e)
     {
-        if (sender is SwipeItem swipeItem)
+        try
         {
-            var SwipeView = swipeItem.BindingContext as SharedEvent;
-            if (SwipeView == null)
+            if (sender is SwipeItem swipeItem)
             {
-                await DisplayAlert("Error", "Failed to identify the item to delete.", "OK");
-            }
-            else
-            {
-                bool isDeletionConfirmed = await DisplayAlert("Delete Event", $"Are you sure you want to delete the event \"{SwipeView.Event}\"?", "Yes", "No");
-                if (isDeletionConfirmed)
+                var SwipeView = swipeItem.BindingContext as SharedEvent;
+                if (SwipeView == null)
                 {
-                    await _firebaseClient.Child("SharedEvent").Child($"{SwipeView.EventId}").DeleteAsync();
-                    await LoadEventsAsync();
+                    await DisplayAlert("Error", "Failed to identify the item to delete.", "OK");
+                }
+                else
+                {
+                    bool isDeletionConfirmed = await DisplayAlert("Delete Event", $"Are you sure you want to delete the event \"{SwipeView.Event}\"?", "Yes", "No");
+                    if (isDeletionConfirmed)
+                    {
+                        await _firebaseClient.Child("SharedEvent").Child($"{SwipeView.EventId}").DeleteAsync();
+                        await Toast.Make("Event deleted successfully", ToastDuration.Short).Show();
+                        await LoadEventsAsync();
+                    }
                 }
             }
+        }
+        catch (FirebaseException)
+        {
+            await Toast.Make("Firebase Error", ToastDuration.Long).Show();
+        }
+        catch (Exception)
+        {
+            await Toast.Make("Error", ToastDuration.Long).Show();
         }
     }
 }

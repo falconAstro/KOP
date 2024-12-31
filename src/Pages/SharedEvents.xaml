@@ -9,9 +9,8 @@
             FontSize="16"
             FontAttributes="Bold"
             Margin="5"/>
-        <Entry 
-            x:Name="EntryDate" 
-            Placeholder="Enter date"
+        <DatePicker
+            x:Name="EventDatePicker"
             Margin="5"/>
         <Entry 
             x:Name="EntrySharedEvent" 
@@ -43,7 +42,7 @@
                             </Grid.ColumnDefinitions>
                             <Label Text ="{Binding Event}" BackgroundColor="White" Padding="10" Grid.Row="0" Grid.ColumnSpan="2"/>
                             <Label Text="Date:" BackgroundColor="White" Padding="10" Grid.Row="1" Grid.Column="0"/>
-                            <Label Text ="{Binding Date}" BackgroundColor="White" Padding="10" Grid.Row="1" Grid.Column="1"/>
+                            <Label Text ="{Binding Date,StringFormat='{0:dddd, dd MMMM yyyy}'}" BackgroundColor="White" Padding="10" Grid.Row="1" Grid.Column="1"/>
                         </Grid>
                         <SwipeView.RightItems>
                             <SwipeItems>

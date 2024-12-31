@@ -28,7 +28,7 @@ namespace TimeManagementApp.Classes
     {
         //public string Username { get; set; }
         public required string Event { get; set; }
-        public required string Date { get; set; }
+        public DateTime Date { get; set; }
         public string EventId { get; set; }
     }
     public class ShoppingList
