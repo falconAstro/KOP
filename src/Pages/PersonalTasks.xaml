@@ -6,9 +6,7 @@
     <VerticalStackLayout>
         <Label 
             Text="Create a new personal task"
-            FontSize="16"
-            FontAttributes="Bold"
-            Margin="5" />
+            Style="{StaticResource Headline}"/>
         <Entry 
             x:Name="EntryPersonalTask" 
             Placeholder="Enter the new task"
@@ -20,17 +18,15 @@
             Margin="5"/>
         <Label
             Text="My current personal tasks"
-            FontSize="16"
-            FontAttributes="Bold"
-            Margin="5"/>
+            Style="{StaticResource Headline}"/>
         <!-- zobrazenie zoznamu taskov nacitanych z databazy-->
 
         <CollectionView ItemsSource="{Binding PersonalTaskList}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <SwipeView>
-                        <Grid Padding="1" RowSpacing="10" BackgroundColor="Black">
-                            <Label Text ="{Binding Task}" BackgroundColor="White" Padding="10"/>
+                        <Grid Style="{StaticResource ListGrid}">
+                            <Label Text ="{Binding Task}" Style="{StaticResource ItemLabel}"/>
                         </Grid>
                         <SwipeView.RightItems>
                             <SwipeItems>

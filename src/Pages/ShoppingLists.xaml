@@ -39,7 +39,7 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <SwipeView>
-                        <Grid Padding="1"  BackgroundColor="Black">
+                        <Grid Style="{StaticResource ListGrid}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -49,13 +49,13 @@
                                 <ColumnDefinition Width="60"/>
                                 <ColumnDefinition Width="340"/>
                             </Grid.ColumnDefinitions>
-                            <Label Text = "{Binding Date}" BackgroundColor="White" Padding="10" Grid.Row="0" Grid.ColumnSpan="2" FontAttributes="Bold"/>
-                            <Label Text="From:" BackgroundColor="White" Padding="10" Grid.Row="1" Grid.Column="0" FontAttributes="Bold"/>
-                            <Label Text = "{Binding Username}" BackgroundColor="White" Padding="10" Grid.Row="1" Grid.Column="1" FontAttributes="Italic"/>
+                            <Label Text = "{Binding Date}" Style="{StaticResource ItemLabel}" Grid.Row="0" Grid.ColumnSpan="2" FontAttributes="Bold"/>
+                            <Label Text="From:" Style="{StaticResource ItemLabel}" Grid.Row="1" Grid.Column="0" FontAttributes="Bold"/>
+                            <Label Text = "{Binding Username}" Style="{StaticResource ItemLabel}" Grid.Row="1" Grid.Column="1" FontAttributes="Italic"/>
                             <CollectionView ItemsSource="{Binding ShoppingItems}" Grid.ColumnSpan="2" Grid.Row="2">
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
-                                        <Label Text = "{Binding .}" BackgroundColor="White" Padding="4"/>
+                                        <Label Text = "{Binding .}" Style="{StaticResource ItemLabel}" Padding="4"/>
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>
                             </CollectionView>

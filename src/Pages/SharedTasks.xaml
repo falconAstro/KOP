@@ -34,7 +34,7 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <SwipeView>
-                        <Grid Padding="1"  BackgroundColor="Black">
+                        <Grid Style="{StaticResource ListGrid}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -43,9 +43,9 @@
                                 <ColumnDefinition Width="60"/>
                                 <ColumnDefinition Width="340"/>
                             </Grid.ColumnDefinitions>
-                            <Label Text="From:" BackgroundColor="White" Padding="10" Grid.Row="0" Grid.Column="0"/>
-                            <Label Text = "{Binding Username}" BackgroundColor="White" Padding="10" Grid.Row="0" Grid.Column="1" FontAttributes="Italic"/>
-                            <Label Text = "{Binding Task}" BackgroundColor="White" Padding="10" Grid.Row="1" Grid.ColumnSpan="2" FontAttributes="Bold"/>
+                            <Label Text="From:" Style="{StaticResource ItemLabel}" Grid.Row="0" Grid.Column="0"/>
+                            <Label Text = "{Binding Username}" Style="{StaticResource ItemLabel}" Grid.Row="0" Grid.Column="1" FontAttributes="Italic"/>
+                            <Label Text = "{Binding Task}" Style="{StaticResource ItemLabel}" Grid.Row="1" Grid.ColumnSpan="2" FontAttributes="Bold"/>
                         </Grid>
                         <SwipeView.RightItems>
                             <SwipeItems>
