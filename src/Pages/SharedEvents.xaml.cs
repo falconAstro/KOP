@@ -10,12 +10,14 @@ namespace TimeManagementApp.Pages;
 
 public partial class SharedEvents : ContentPage
 {
+    //Firebase clients
     private readonly FirebaseClient _firebaseClient;
     private readonly FirebaseAuthClient _firebaseAuthClient;
-    private DateTime DateNow;
-    private List<SharedEvent> TempSharedEventsList { get; set; } = [];
-    public ObservableCollection<SharedEvent> SharedEventsList { get; set; } = [];
+    private DateTime DateNow;//Aktualny datum a cas
+    private List<SharedEvent> TempSharedEventsList { get; set; } = [];//Zoznam Shared eventov
+    public ObservableCollection<SharedEvent> SharedEventsList { get; set; } = [];//Zoznam zoradenych Shared eventov (pre zobrazenie v UI)
 
+    //Konstruktor stranky
     public SharedEvents(FirebaseClient firebaseClient, FirebaseAuthClient firebaseAuthClient)
     {
         InitializeComponent();
@@ -24,17 +26,18 @@ public partial class SharedEvents : ContentPage
         _firebaseClient = firebaseClient = new FirebaseClient("https://timemanagement-4d83d-default-rtdb.firebaseio.com/",
         new FirebaseOptions()
         {
-            AuthTokenAsyncFactory = () => _firebaseAuthClient.User.GetIdTokenAsync()
+            AuthTokenAsyncFactory = () => _firebaseAuthClient.User.GetIdTokenAsync()//Refresh tokenu
         });
     }
-    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
+    protected override async void OnNavigatedTo(NavigatedToEventArgs args)//Vykona sa pri nacitani stranky
     {
         try
         {
             base.OnNavigatedTo(args);
-            DateNow = DateTime.Now;
+            DateNow = DateTime.Now;//Aktualny datum a cas
             SharedEventsList.Clear();
             await LoadEventsAsync();
+            await Toast.Make("Loaded data successfully", ToastDuration.Short).Show();
         }
         catch (FirebaseException)
         {
@@ -45,7 +48,7 @@ public partial class SharedEvents : ContentPage
             await Toast.Make("Error", ToastDuration.Short).Show();
         }
     }
-    public async Task LoadEventsAsync()
+    public async Task LoadEventsAsync()//Nacitanie Shared eventov z databazy a ich zoradenie podla datumu
     {
         EventDatePicker.Date = DateNow;
         EventDatePicker.MinimumDate = DateNow;
@@ -63,9 +66,9 @@ public partial class SharedEvents : ContentPage
         {
             SharedEventsList.Add(_event);
         }
-        await Toast.Make("Loaded data successfully", ToastDuration.Short).Show();
     }
-    private async Task CreateEventAsync()
+
+    private async Task CreateEventAsync()//Vytvorenie Shared eventu
     {
         try
         {
@@ -75,7 +78,7 @@ public partial class SharedEvents : ContentPage
                 Date = EventDatePicker.Date
             });
             EntrySharedEvent.Text = string.Empty;
-            await Toast.Make("Event created successfully", ToastDuration.Long).Show();
+            await Toast.Make("Event created successfully", ToastDuration.Short).Show();
             await LoadEventsAsync();
         }
         catch (FirebaseException)
@@ -87,11 +90,20 @@ public partial class SharedEvents : ContentPage
             await Toast.Make("Error", ToastDuration.Short).Show();
         }
     }
+
     private async void BtnCreateSharedEvent_Clicked(object sender, EventArgs e)
     {
-        await CreateEventAsync();
+        if (!string.IsNullOrEmpty(EntrySharedEvent.Text))
+        {
+            await CreateEventAsync();
+        }
+        else
+        {
+            await Toast.Make("Enter an event and pick a date first!", ToastDuration.Short).Show();
+        }
     }
-    private async void OnDeleteSwipeItemInvoked(object sender, EventArgs e)
+
+    private async void OnDeleteSwipeItemInvoked(object sender, EventArgs e)//Vymazavanie jednotlivych Shared eventov
     {
         try
         {
@@ -116,11 +128,11 @@ public partial class SharedEvents : ContentPage
         }
         catch (FirebaseException)
         {
-            await Toast.Make("Firebase Error", ToastDuration.Long).Show();
+            await Toast.Make("Firebase Error", ToastDuration.Short).Show();
         }
         catch (Exception)
         {
-            await Toast.Make("Error", ToastDuration.Long).Show();
+            await Toast.Make("Error", ToastDuration.Short).Show();
         }
     }
 }

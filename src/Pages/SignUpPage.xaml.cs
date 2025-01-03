@@ -9,10 +9,11 @@ namespace TimeManagementApp.Pages;
 
 public partial class SignUpPage : ContentPage
 {
-    private FirebaseAuthClient _firebaseAuthClient;
-    private FirebaseClient _firebaseClient;
+    //Firebase clients
+    private readonly FirebaseAuthClient _firebaseAuthClient;
+    private readonly FirebaseClient _firebaseClient;
 
-    private User User { get; set; }
+    //Konstruktor stranky
     public SignUpPage(FirebaseAuthClient firebaseAuthClient, FirebaseClient firebaseClient)
 	{
 		InitializeComponent();
@@ -20,60 +21,63 @@ public partial class SignUpPage : ContentPage
         _firebaseClient = firebaseClient = new FirebaseClient("https://timemanagement-4d83d-default-rtdb.firebaseio.com/",
         new FirebaseOptions()
         {
-            AuthTokenAsyncFactory = () => _firebaseAuthClient.User.GetIdTokenAsync()
+            AuthTokenAsyncFactory = () => _firebaseAuthClient.User.GetIdTokenAsync()//Refresh tokenu
         });
     }
-    //Vymazanie Entry pri nacitani
-    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
+
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)//Vykona sa pri nacitani stranky 
     {
         base.OnNavigatedTo(args);
+        //Vymazanie Entry pri nacitani
+        EntryUsername.Text = string.Empty;
         EntryEMail.Text = string.Empty;
         EntryPassword.Text = string.Empty;
-        EntryUsername.Text = string.Empty;
         EntryRepeatedPassword.Text = string.Empty;
     }
-    private async void SignUp()
+
+    private async Task SignUp()//Registracia
     {
-        
         try
         {
+            if(EntryUsername.Text == string.Empty)//Overenie ci uzivatel zadal Username
+            {
+                await Toast.Make("Enter a username first!", ToastDuration.Short).Show();
+            }
             //Porovnanie oboch password entry
-            if (EntryPassword.Text == EntryRepeatedPassword.Text)
+            else if (EntryPassword.Text == EntryRepeatedPassword.Text)
             {
                 //Vytvorenie pouzivatela
                 var credentials = await _firebaseAuthClient.CreateUserWithEmailAndPasswordAsync(email:EntryEMail.Text, password:EntryPassword.Text, displayName:EntryUsername.Text);
-
-                //log in
+                //Log in z dovodu pridania noveho uctu do DB
                 await _firebaseAuthClient.SignInWithEmailAndPasswordAsync(email: EntryEMail.Text, password: EntryPassword.Text);
-                User = _firebaseAuthClient.User;
-
-                //vytvorenie objektu registered user
-                await _firebaseClient.Child("RegisteredUsers").PostAsync(new RegisteredUser{ Username=EntryUsername.Text, UserId = User.Uid, Email=EntryEMail.Text });
-                //log out
-                _firebaseAuthClient.SignOut();
-                await Toast.Make("Signed up succesfully", ToastDuration.Long).Show();
-                //Navrat na Log In page
-                await Shell.Current.GoToAsync("..");
+                var LoggedUser = _firebaseAuthClient.User;//Aktualne prihlaseny user
+                //Vytvorenie objektu registered user v DB
+                await _firebaseClient.Child("RegisteredUsers").PostAsync(new RegisteredUser{Username=EntryUsername.Text, UserId = LoggedUser.Uid, Email=EntryEMail.Text});
+                _firebaseAuthClient.SignOut();//Log out
+                await Toast.Make("Signed up succesfully", ToastDuration.Short).Show();
+                await Shell.Current.GoToAsync("..");//Navrat na Log In page
             }
             else
             {
-                await Toast.Make("Passwords do not match!", ToastDuration.Long).Show();
+                await Toast.Make("Passwords do not match!", ToastDuration.Short).Show();
             }
         }
-        //Errory spojene s Firebase Auth systemom (nespravny email, atd)
-        catch (FirebaseAuthException)
+        catch (FirebaseAuthException)//Errory spojene s Firebase Auth systemom (nespravny email, atd)
         {
-            await Toast.Make("Firebase Error", ToastDuration.Long).Show();
+            await Toast.Make($"Firebase Auth Error", ToastDuration.Short).Show();
         }
-        //Ostatne errory
-        catch (Exception)
+        catch (FirebaseException)//Errory spojene s DB
         {
-            await Toast.Make("Error", ToastDuration.Long).Show();
+            await Toast.Make($"Firebase DB Error", ToastDuration.Short).Show();
+        }
+        catch (Exception)//Ostatne errory
+        {
+            await Toast.Make("Error", ToastDuration.Short).Show();
         }
     }
-    //Vytvorenie usera a vymazanie Entry obsahu
-    private async void BtnSignUp_Clicked(object sender, EventArgs e)
+
+    private async void BtnSignUp_Clicked(object sender, EventArgs e)//Stlacenie tlacidla registracie
     {
-        SignUp();
+        await SignUp();
     }
 }

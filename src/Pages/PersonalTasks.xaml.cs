@@ -13,9 +13,9 @@ public partial class PersonalTasks : ContentPage
     private readonly FirebaseAuthClient _firebaseAuthClient;
     private readonly FirebaseClient _firebaseClient;
     public ObservableCollection<PersonalTask> PersonalTaskList { get; set; } = []; //Zoznam Taskov nacitavanych z DB
-    public User User { get; set; } //Premenna (neskor) obsahujuca aktualne prihlaseneho usera
+    public User LoggedUser { get; set; } //Premenna (neskor) obsahujuca aktualne prihlaseneho usera
 
-    //Inicializacia stranky
+    //Konstruktor stranky
     public PersonalTasks(FirebaseClient firebaseClient, FirebaseAuthClient firebaseAuthClient)
 	{
 		InitializeComponent();
@@ -24,17 +24,22 @@ public partial class PersonalTasks : ContentPage
         _firebaseClient = firebaseClient = new FirebaseClient("https://timemanagement-4d83d-default-rtdb.firebaseio.com/",
             new FirebaseOptions()
             {
-                AuthTokenAsyncFactory = () => _firebaseAuthClient.User.GetIdTokenAsync()
+                AuthTokenAsyncFactory = () => _firebaseAuthClient.User.GetIdTokenAsync()//Refresh tokenu
             });
     }
 
-    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
+    protected override async void OnNavigatedTo(NavigatedToEventArgs args)//Vykona sa pri nacitani stranky 
     {
         try
         {
             base.OnNavigatedTo(args);
-            User = _firebaseAuthClient.User;
-            await LoadTasksAsync();
+            LoggedUser = _firebaseAuthClient.User;//Aktualne prihlaseny user
+            LoadTasksAsync();
+            await Toast.Make("Loaded data successfully", ToastDuration.Short).Show();
+        }
+        catch (FirebaseAuthException)
+        {
+            await Toast.Make("Firebase Auth Error", ToastDuration.Short).Show();
         }
         catch (FirebaseException)
         {
@@ -46,11 +51,10 @@ public partial class PersonalTasks : ContentPage
         }
     }
 
-    //Funkcia nacitania taskov z databazy
-    public async Task LoadTasksAsync()
+    public void LoadTasksAsync()//Nacitanie taskov z databazy
     {
         PersonalTaskList.Clear();
-        _firebaseClient.Child("PersonalTask").Child(User.Uid).AsObservable<PersonalTask>().Subscribe((item) =>
+        _firebaseClient.Child("PersonalTask").Child(LoggedUser.Uid).AsObservable<PersonalTask>().Subscribe((item) =>
         {
             if (item.Object != null)
             {
@@ -58,13 +62,12 @@ public partial class PersonalTasks : ContentPage
                 PersonalTaskList.Add(item.Object);
             }
         });
-        await Toast.Make("Loaded data successfully", ToastDuration.Long).Show();
     }
-    private async Task CreateTaskAsync()
+    private async Task CreateTaskAsync()//Vytvorenie jednoducheho tasku v databaze
     {
         try
         {
-            await _firebaseClient.Child("PersonalTask").Child(User.Uid).PostAsync(new PersonalTask { Task = EntryPersonalTask.Text });
+            await _firebaseClient.Child("PersonalTask").Child(LoggedUser.Uid).PostAsync(new PersonalTask { Task = EntryPersonalTask.Text });
             EntryPersonalTask.Text = string.Empty;
             await Toast.Make("Task successfully created", ToastDuration.Long).Show();
         }
@@ -77,12 +80,19 @@ public partial class PersonalTasks : ContentPage
             await Toast.Make("Error", ToastDuration.Short).Show();
         }
     }
-    //Vytvorenie jednoducheho tasku v databaze
+
     private async void BtnCreatePersonalTask_Clicked(object sender, EventArgs e)
     {
-        await CreateTaskAsync();
+        if(!string.IsNullOrEmpty(EntryPersonalTask.Text))
+        {
+            await CreateTaskAsync();
+        }
+        else
+        {
+            await Toast.Make("Enter a task first!", ToastDuration.Short).Show();
+        }
     }
-    private async void OnDeleteSwipeItemInvoked(object sender, EventArgs e)
+    private async void OnDeleteSwipeItemInvoked(object sender, EventArgs e)//Vymazavanie jednotlivych taskov
     {
         try
         {
@@ -91,19 +101,18 @@ public partial class PersonalTasks : ContentPage
                 var SwipeView = swipeItem.BindingContext as PersonalTask;
                 if (SwipeView == null)
                 {
-                    await DisplayAlert("Error", "Failed to identify the item to delete.", "OK");
+                    await Toast.Make("Failed to identify item for deletion", ToastDuration.Short).Show();
                 }
                 else
                 {
                     bool isDeletionConfirmed = await DisplayAlert("Delete Task", $"Are you sure you want to delete the task \"{SwipeView.Task}\"?", "Yes", "No");
                     if (isDeletionConfirmed)
                     {
-                        await _firebaseClient.Child("PersonalTask").Child(User.Uid).Child($"{SwipeView.TaskId}").DeleteAsync();
+                        await _firebaseClient.Child("PersonalTask").Child(LoggedUser.Uid).Child($"{SwipeView.TaskId}").DeleteAsync();
                         await Toast.Make("Task successfully deleted", ToastDuration.Short).Show();
-                        await LoadTasksAsync();
+                        LoadTasksAsync();
                     }
                 }
-
             }
         }
         catch(FirebaseException)

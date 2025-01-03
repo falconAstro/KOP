@@ -6,9 +6,7 @@
     <VerticalStackLayout>
         <Label 
             Text="Create a new shared event" 
-            FontSize="16"
-            FontAttributes="Bold"
-            Margin="5"/>
+            Style="{StaticResource Headline}"/>
         <DatePicker
             x:Name="EventDatePicker"
             Margin="5"/>
@@ -23,9 +21,7 @@
             Margin="5"/>
         <Label
             Text="Current events"
-            FontSize="16"
-            FontAttributes="Bold"
-            Margin="5"/>
+            Style="{StaticResource Headline}"/>
         
         <CollectionView ItemsSource="{Binding SharedEventsList}">
             <CollectionView.ItemTemplate>

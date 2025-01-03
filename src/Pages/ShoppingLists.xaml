@@ -5,9 +5,7 @@
     <VerticalStackLayout>
         <Label 
             Text="Create a new shopping list" 
-            FontSize="16"
-            FontAttributes="Bold"
-            Margin="5"/>
+            Style="{StaticResource Headline}"/>
         <Picker 
             x:Name="picker"
             Title="Select a target user"
@@ -31,9 +29,7 @@
             Margin="5"/>
         <Label
             Text="My current shopping lists"
-            FontSize="16"
-            FontAttributes="Bold"
-            Margin="5"/>
+            Style="{StaticResource Headline}"/>
 
         <CollectionView ItemsSource="{Binding ShoppingListList}">
             <CollectionView.ItemTemplate>

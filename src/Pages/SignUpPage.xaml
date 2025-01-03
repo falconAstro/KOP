@@ -29,14 +29,16 @@
         <Entry
             x:Name="EntryPassword"
             Placeholder="Enter a new password"
-            Margin="5,0,5,3"/>
+            Margin="5,0,5,3"
+            IsPassword="True"/>
         <Label 
             Text="Repeat Password:"
             Margin="5,0,5,0"/>
         <Entry
             x:Name="EntryRepeatedPassword"
             Placeholder="Repeat the password"
-            Margin="5,0,5,3"/>
+            Margin="5,0,5,3"
+            IsPassword="True"/>
         <Button 
             x:Name="btnSignUp"  
             Clicked="BtnSignUp_Clicked" 

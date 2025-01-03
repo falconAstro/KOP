@@ -10,13 +10,16 @@ namespace TimeManagementApp.Pages;
 
 public partial class ShoppingLists : ContentPage
 {
+    //Firebase clients
     private readonly FirebaseAuthClient _firebaseAuthClient;
     private readonly FirebaseClient _firebaseClient;
-    public User LoggedUser { get; set; }
-    public RegisteredUser SelectedUser { get; set; }
-    public List<string> TempShoppingItems { get; set; } = [];
-    public ObservableCollection<ShoppingList> ShoppingListList { get; set; } = [];
-    public List<RegisteredUser> RegisteredUserList { get; set; } = [];
+    public User LoggedUser { get; set; }//Aktualne prihlaseny user
+    public RegisteredUser SelectedUser { get; set; }//User vybraty v pickeri
+    public List<string> TempShoppingItems { get; set; } = [];//Zoznam itemov pri vytvarani noveho Shopping listu
+    public ObservableCollection<ShoppingList> ShoppingListList { get; set; } = [];//Zoznam Shopping listov nacitavanych z DB
+    public List<RegisteredUser> RegisteredUserList { get; set; } = [];//Zoznam userov nacitavanych z DB
+
+    //Konstruktor stranky
     public ShoppingLists(FirebaseClient firebaseClient, FirebaseAuthClient firebaseAuthClient)
     {
         InitializeComponent();
@@ -25,36 +28,40 @@ public partial class ShoppingLists : ContentPage
         _firebaseClient = firebaseClient = new FirebaseClient("https://timemanagement-4d83d-default-rtdb.firebaseio.com/",
         new FirebaseOptions()
         {
-            AuthTokenAsyncFactory = () => _firebaseAuthClient.User.GetIdTokenAsync()
+            AuthTokenAsyncFactory = () => _firebaseAuthClient.User.GetIdTokenAsync()//Refresh tokenu
         });
     }
-    //Nacitanie listov pri otvoreni stranky 
-    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
+
+    protected override async void OnNavigatedTo(NavigatedToEventArgs args)//Vykona sa pri nacitani stranky
     {
         try
         {
             base.OnNavigatedTo(args);
-            LoggedUser = _firebaseAuthClient.User;
-            //Nacitanie pouzivatelov do pickeru
+            LoggedUser = _firebaseAuthClient.User;//Aktualne prihlaseny user
+            //Nacitanie pouzivatelov do zoznamu pre picker
             var _RegisteredUserList = LoadRegisteredUsersAsync();
             RegisteredUserList.Clear();
             RegisteredUserList = await _RegisteredUserList;
-            RemoveLoggedUserFromList();
+            RemoveLoggedUserFromList();//Odstranenie aktualne prihlaseneho usera zo zoznamu
             picker.ItemsSource = RegisteredUserList;
-            //Nacitanie taskov pri otvoreni stranky 
-            await LoadShoppingListsAsync();
+            LoadShoppingListsAsync();
+            await Toast.Make("Loaded data successfully", ToastDuration.Short).Show();
+        }
+        catch (FirebaseAuthException)
+        {
+            await Toast.Make("Firebase Auth Error", ToastDuration.Short).Show();
         }
         catch (FirebaseException)
         {
-            await Toast.Make("Firebase Error", ToastDuration.Long).Show();
+            await Toast.Make("Firebase Error", ToastDuration.Short).Show();
         }
         catch (Exception)
         {
-            await Toast.Make("Error", ToastDuration.Long).Show();
+            await Toast.Make("Error", ToastDuration.Short).Show();
         }
     }
-    //Funkcia nacitania listov z databazy
-    public async Task LoadShoppingListsAsync()
+
+    public void LoadShoppingListsAsync()//Nacitanie Shopping listov z databazy
     {
         ShoppingListList.Clear();
         _firebaseClient.Child("ShoppingList").Child(LoggedUser.Uid).AsObservable<ShoppingList>().Subscribe((item) =>
@@ -65,9 +72,9 @@ public partial class ShoppingLists : ContentPage
                 ShoppingListList.Add(item.Object);
             }
         });
-        await Toast.Make("Loaded data successfully", ToastDuration.Long).Show();
     }
-    public async Task<List<RegisteredUser>> LoadRegisteredUsersAsync()
+
+    public async Task<List<RegisteredUser>> LoadRegisteredUsersAsync()//Nacitanie userov z databazy
     {
         return (await _firebaseClient.Child("RegisteredUsers").OnceAsync<RegisteredUser>()).Select(item => new RegisteredUser
         {
@@ -76,12 +83,24 @@ public partial class ShoppingLists : ContentPage
             Email = item.Object.Email,
         }).ToList();
     }
-    private void BtnAddShoppingItem_Clicked(object sender, EventArgs e)
+
+    private async Task AddItemToList()//Pridanie itemu do zoznamu
     {
-        TempShoppingItems.Add(EntryShoppingItem.Text);
-        EntryShoppingItem.Text = string.Empty;
+        if (!string.IsNullOrEmpty(EntryShoppingItem.Text))
+        {
+            TempShoppingItems.Add(EntryShoppingItem.Text);
+            EntryShoppingItem.Text = string.Empty;
+        }
+        else
+        {
+            await Toast.Make("Enter an item first!", ToastDuration.Short).Show();
+        }
     }
-    private async Task CreateShoppingListAsync()
+    private async void BtnAddShoppingItem_Clicked(object sender, EventArgs e)
+    {
+        await AddItemToList();
+    }
+    private async Task CreateShoppingListAsync()//Vytvorenie Shopping listu
     {
         try
         {
@@ -103,21 +122,29 @@ public partial class ShoppingLists : ContentPage
             await Toast.Make("Error", ToastDuration.Long).Show();
         }
     }
+
     private async void BtnCreateShoppingList_Clicked(object sender, EventArgs e)
     {
-        await CreateShoppingListAsync();
+        if (TempShoppingItems.Count>0 && SelectedUser != null)
+        {
+            await CreateShoppingListAsync();
+        }
+        else
+        {
+            await Toast.Make("Enter items and pick a user first!", ToastDuration.Short).Show();
+        }
     }
-    void OnPickerSelectedIndexChanged(object sender, EventArgs e)
+
+    void OnPickerSelectedIndexChanged(object sender, EventArgs e)//Vybratie Shopping listu v pickeri
     {
         var picker = (Picker)sender;
         int selectedIndex = picker.SelectedIndex;
-
         if (selectedIndex != -1)
         {
             SelectedUser = (RegisteredUser)picker.ItemsSource[selectedIndex];
         }
     }
-    public void RemoveLoggedUserFromList()
+    public void RemoveLoggedUserFromList()//Odstranenie aktualne prihlaseneho usera zo zoznamu
     {
         foreach (RegisteredUser ListUser in RegisteredUserList)
         {
@@ -128,7 +155,7 @@ public partial class ShoppingLists : ContentPage
             }
         }
     }
-    private async void OnDeleteSwipeItemInvoked(object sender, EventArgs e)
+    private async void OnDeleteSwipeItemInvoked(object sender, EventArgs e)//Vymazavanie jednotlivych Shopping listov
     {
         try
         {
@@ -146,18 +173,18 @@ public partial class ShoppingLists : ContentPage
                     {
                         await _firebaseClient.Child("ShoppingList").Child(LoggedUser.Uid).Child($"{SwipeView.ListId}").DeleteAsync();
                         await Toast.Make("Shopping list successfully deleted", ToastDuration.Short).Show();
-                        await LoadShoppingListsAsync();
+                        LoadShoppingListsAsync();
                     }
                 }
             }
         }
         catch (FirebaseException)
         {
-            await Toast.Make("Firebase Error", ToastDuration.Long).Show();
+            await Toast.Make("Firebase Error", ToastDuration.Short).Show();
         }
         catch (Exception)
         {
-            await Toast.Make("Error", ToastDuration.Long).Show();
+            await Toast.Make("Error", ToastDuration.Short).Show();
         }
     }
 }

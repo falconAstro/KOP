@@ -5,7 +5,7 @@
              Title="Log In">
     <VerticalStackLayout>
         <Label 
-            Text="Please Log In to proceed!" 
+            Text="Please Sign In to proceed!" 
             FontSize="16"
             FontAttributes="Bold"
             Margin="5,0,5,3" />
@@ -22,11 +22,12 @@
         <Entry 
             x:Name="EntryPassword" 
             Placeholder="Enter your Password"
-            Margin="5,0,5,0"/>
+            Margin="5,0,5,0"
+            IsPassword="True"/>
         <Button 
-            x:Name="btnLogIn"  
-            Clicked="BtnLogIn_Clicked" 
-            Text="Log In"
+            x:Name="btnSignIn"  
+            Clicked="BtnSignIn_Clicked" 
+            Text="Sign In"
             Margin="5,3,5,0"/>
         <Label 
             Text="Don't have an account?"

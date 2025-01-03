@@ -5,9 +5,7 @@
     <VerticalStackLayout>
         <Label 
             Text="Create a new shared task" 
-            FontSize="16"
-            FontAttributes="Bold"
-            Margin="5" />
+            Style="{StaticResource Headline}"/>
         <Picker 
             x:Name="picker"
             Title="Select a target user"
@@ -26,9 +24,7 @@
             Margin="5"/>
         <Label
             Text="My current tasks"
-            FontSize="16"
-            FontAttributes="Bold"
-            Margin="5"/>
+            Style="{StaticResource Headline}"/>
 
         <CollectionView ItemsSource="{Binding SharedTaskList}">
             <CollectionView.ItemTemplate>

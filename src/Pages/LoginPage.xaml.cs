@@ -7,8 +7,11 @@ namespace TimeManagementApp.Pages;
 
 public partial class LoginPage : ContentPage
 {
+    //Firebase clients
     private FirebaseAuthClient _firebaseAuthClient;
     private FirebaseClient _firebaseClient;
+
+    //Konstruktor stranky
     public LoginPage(FirebaseAuthClient firebaseAuthClient, FirebaseClient firebaseClient)
 	{
 		InitializeComponent();
@@ -16,47 +19,40 @@ public partial class LoginPage : ContentPage
         _firebaseClient = firebaseClient = new FirebaseClient("https://timemanagement-4d83d-default-rtdb.firebaseio.com/",
         new FirebaseOptions()
         {
-                AuthTokenAsyncFactory = () => _firebaseAuthClient.User.GetIdTokenAsync()
+                AuthTokenAsyncFactory = () => _firebaseAuthClient.User.GetIdTokenAsync() //Refresh tokenu
             });
     }
 
-	//Vymazanie Entry pri nacitani
-    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)//Vykona sa pri nacitani stranky 
     {
         base.OnNavigatedTo(args);
+        //Vymazanie Entry pri nacitani
         EntryEMail.Text = string.Empty;
 		EntryPassword.Text = string.Empty;	
     }
-    //Stlacenie login tlacidla a prihlasenie
-    private async void BtnLogIn_Clicked(object sender, EventArgs e)
-	{
+
+    private async void BtnSignIn_Clicked(object sender, EventArgs e)//Stlacenie login tlacidla
+    {
         try
         {
             //Prihlasenie
-            var credentials = await _firebaseAuthClient.SignInWithEmailAndPasswordAsync(email: EntryEMail.Text, password: EntryPassword.Text);
-            await Toast.Make("Signed in succesfully", ToastDuration.Long).Show();
+            await _firebaseAuthClient.SignInWithEmailAndPasswordAsync(email: EntryEMail.Text, password: EntryPassword.Text);
+            await Toast.Make("Signed in succesfully", ToastDuration.Short).Show();
             //Otvorenie taskov
             await Shell.Current.GoToAsync($"//{nameof(PersonalTasks)}");
         }
-        //Errory spojene s Firebase Auth systemom (nespravny email, atd)
-        catch (FirebaseAuthException)
+        catch (FirebaseAuthException)//Errory spojene s Firebase Auth systemom (nespravny email, atd)
         {
-            await Toast.Make("Firebase Error", ToastDuration.Long).Show();
+            await Toast.Make("Firebase Auth Error", ToastDuration.Short).Show();
         }
-        //Ostatne errory
-        catch (Exception)
+        catch (Exception)//Ostatne errory
         {
-            await Toast.Make("Error", ToastDuration.Long).Show();
+            await Toast.Make("Error", ToastDuration.Short).Show();
         }
-        
 	}
 
-	//Stlacenie SignUp tlacidla
-    private void BtnGoToSignUpPage_Clicked(object sender, EventArgs e)
+    private void BtnGoToSignUpPage_Clicked(object sender, EventArgs e)//Stlacenie SignUp tlacidla
     {	
-		
 		Shell.Current.GoToAsync(nameof(SignUpPage));
-        
-       
     }
 }

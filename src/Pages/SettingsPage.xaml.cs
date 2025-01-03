@@ -2,56 +2,43 @@ using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using Firebase.Auth;
 using Firebase.Database;
-using Firebase.Database.Query;
-using TimeManagementApp.Classes;
 
 namespace TimeManagementApp.Pages;
 
 public partial class SettingsPage : ContentPage
 {
-    private FirebaseAuthClient _firebaseAuthClient;
-    private FirebaseClient _firebaseClient;
-    private User User { get; set; }
-    private RegisteredUser PickedUser { get; set; }
-    public SettingsPage(FirebaseAuthClient firebaseAuthClient,FirebaseClient firebaseClient)
+    //Firebase client
+    private readonly FirebaseAuthClient _firebaseAuthClient;
+
+    //Konstruktor stranky
+    public SettingsPage(FirebaseAuthClient firebaseAuthClient)
 	{
 		InitializeComponent();
-        
         _firebaseAuthClient = firebaseAuthClient;
-        _firebaseClient = firebaseClient = new FirebaseClient("https://timemanagement-4d83d-default-rtdb.firebaseio.com/",
-        new FirebaseOptions()
-        {
-            AuthTokenAsyncFactory = () => _firebaseAuthClient.User.GetIdTokenAsync()
-        });
     }
-    public async Task LoadRegisteredUsersAsync()
-    {
-        var LoadUsers = await _firebaseClient.Child("RegisteredUsers").OrderBy("UserID").EqualTo(User.Uid).OnceAsync<RegisteredUser>();
-        var LoadedUser = LoadUsers.FirstOrDefault();
-        PickedUser = LoadedUser.Object;
-        UsernameLabel.Text = PickedUser.Username;
-        EmailLabel.Text = PickedUser.Email;
-        IdLabel.Text = PickedUser.UserId;
-    }
-    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
+
+    protected override async void OnNavigatedTo(NavigatedToEventArgs args)//Vykona sa pri nacitani stranky 
     {
         try 
         {
             base.OnNavigatedTo(args);
-            User = _firebaseAuthClient.User;
-            await LoadRegisteredUsersAsync();
-            await Toast.Make("Loaded data successfully", ToastDuration.Long).Show();
+            //Nacitanie logged usera a jeho udajov
+            var LoggedUser = _firebaseAuthClient.User;
+            UsernameLabel.Text = LoggedUser.Info.DisplayName;
+            EmailLabel.Text = LoggedUser.Info.Email;
+            IdLabel.Text = LoggedUser.Uid;
+            await Toast.Make("Loaded data successfully", ToastDuration.Short).Show();
         }
-        catch (FirebaseException) 
+        catch (FirebaseAuthException) 
         {
-            await Toast.Make("Firebase error", ToastDuration.Short).Show();
+            await Toast.Make("Firebase Auth error", ToastDuration.Short).Show();
         }
         catch (Exception) 
         {
             await Toast.Make("Error", ToastDuration.Short).Show();
         }
     }
-    private async Task LogOut()
+    private async Task SignOut()//Odhlasenie
     {
         try
         {
@@ -72,9 +59,9 @@ public partial class SettingsPage : ContentPage
             await Toast.Make("Error", ToastDuration.Long).Show();
         }
     }
-    private void BtnLogOut_Clicked (object sender, EventArgs e)
+    private async void BtnSignOut_Clicked (object sender, EventArgs e)
 	{
 
-        LogOut();
+        await SignOut();
     }
 }
