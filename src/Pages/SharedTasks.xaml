@@ -2,55 +2,57 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TimeManagementApp.Pages.SharedTasks"
              Title="Shared Tasks">
-    <VerticalStackLayout>
-        <Label 
-            Text="Create a new shared task" 
-            Style="{StaticResource Headline}"/>
-        <Picker 
-            x:Name="picker"
-            Title="Select a target user"
-            Margin="5"
-            ItemsSource ="{Binding RegisteredUserList}"
-            ItemDisplayBinding="{Binding Username}"
-            SelectedItem="{Binding SelectedUser}"/>
-        <Entry 
-            x:Name="EntrySharedTask" 
-            Placeholder="Enter a new task"
-            Margin="5"/>
-        <Button 
-            x:Name="BtnCreateSharedTask"  
-            Clicked="BtnCreateSharedTask_Clicked" 
-            Text="Create Task"
-            Margin="5"/>
-        <Label
-            Text="My current tasks"
-            Style="{StaticResource Headline}"/>
+    <ScrollView>
+        <VerticalStackLayout>
+            <Label 
+                Text="Create a new shared task" 
+                Style="{StaticResource Headline}"/>
+            <Picker 
+                x:Name="picker"
+                Title="Select a target user"
+                Margin="5"
+                ItemsSource ="{Binding RegisteredUserList}"
+                ItemDisplayBinding="{Binding Username}"
+                SelectedItem="{Binding SelectedUser}"/>
+            <Entry 
+                x:Name="EntrySharedTask" 
+                Placeholder="Enter a new task"
+                Margin="5"/>
+            <Button 
+                x:Name="BtnCreateSharedTask"  
+                Clicked="BtnCreateSharedTask_Clicked" 
+                Text="Create Task"
+                Margin="5"/>
+            <Label
+                Text="My current tasks"
+                Style="{StaticResource Headline}"/>
 
-        <CollectionView ItemsSource="{Binding SharedTaskList}">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <SwipeView>
-                        <Grid Style="{StaticResource ListGrid}">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="60"/>
-                                <ColumnDefinition Width="340"/>
-                            </Grid.ColumnDefinitions>
-                            <Label Text="From:" Style="{StaticResource ItemLabel}" Grid.Row="0" Grid.Column="0"/>
-                            <Label Text = "{Binding Username}" Style="{StaticResource ItemLabel}" Grid.Row="0" Grid.Column="1" FontAttributes="Italic"/>
-                            <Label Text = "{Binding Task}" Style="{StaticResource ItemLabel}" Grid.Row="1" Grid.ColumnSpan="2" FontAttributes="Bold"/>
-                        </Grid>
-                        <SwipeView.RightItems>
-                            <SwipeItems>
-                                <SwipeItem Text="Delete" Invoked="OnDeleteSwipeItemInvoked" BackgroundColor="Red" ></SwipeItem>
-                            </SwipeItems>
-                        </SwipeView.RightItems>
-                    </SwipeView>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-    </VerticalStackLayout> 
+            <CollectionView ItemsSource="{Binding SharedTaskList}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <SwipeView>
+                            <Grid Style="{StaticResource ListGrid}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="75"/>
+                                    <ColumnDefinition Width="325"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Text="From:" Style="{StaticResource ItemLabel}" Grid.Row="0" Grid.Column="0"/>
+                                <Label Text = "{Binding Username}" Style="{StaticResource ItemLabel}" Grid.Row="0" Grid.Column="1" FontAttributes="Italic"/>
+                                <Label Text = "{Binding Task}" Style="{StaticResource ItemLabel}" Grid.Row="1" Grid.ColumnSpan="2" FontAttributes="Bold"/>
+                            </Grid>
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Delete" Invoked="OnDeleteSwipeItemInvoked" BackgroundColor="Red" ></SwipeItem>
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

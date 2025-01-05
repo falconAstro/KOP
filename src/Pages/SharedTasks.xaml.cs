@@ -43,7 +43,7 @@ public partial class SharedTasks : ContentPage
             RegisteredUserList = await _RegisteredUserList;
             RemoveLoggedUserFromList();//Odstranenie aktualne prihlaseneho usera zo zoznamu
             picker.ItemsSource = RegisteredUserList;
-            LoadSharedTasksAsync();
+            await LoadSharedTasksToCollection();
             await Toast.Make("Loaded data successfully", ToastDuration.Long).Show();
         }
         catch (FirebaseAuthException)
@@ -60,17 +60,24 @@ public partial class SharedTasks : ContentPage
         }
     }
 
-    private void LoadSharedTasksAsync()//Nacitanie taskov z databazy
+    private async Task LoadSharedTasksToCollection()//Nacitanie shared taskov z pola do observable collection
     {
         SharedTaskList.Clear();
-        _firebaseClient.Child("SharedTask").Child(LoggedUser.Uid).AsObservable<SharedTask>().Subscribe((item) =>
+        var _loadedTasks = await LoadSharedTasksAsync();
+        foreach (SharedTask task in _loadedTasks)
         {
-            if (item.Object != null)
-            {
-                item.Object.TaskId = item.Key;
-                SharedTaskList.Add(item.Object);
-            }
-        });
+            SharedTaskList.Add(task);
+        }
+    }
+
+    private async Task<List<SharedTask>> LoadSharedTasksAsync()//Nacitanie shared taskov z databazy do pola
+    {
+        return (await _firebaseClient.Child("SharedTask").Child(LoggedUser.Uid).OnceAsync<SharedTask>()).Select(item => new SharedTask
+        {
+            Task = item.Object.Task,
+            TaskId = item.Key,
+            Username = item.Object.Username,
+        }).ToList();
     }
 
     private async Task<List<RegisteredUser>> LoadRegisteredUsersAsync()//Nacitanie userov z databazy
@@ -83,7 +90,7 @@ public partial class SharedTasks : ContentPage
         }).ToList();
     }
 
-    private async Task CreateTaskAsync()//Vytvorenie tasku
+    private async Task CreateTaskAsync()//Vytvorenie shared tasku
     {
         try
         {
@@ -107,6 +114,7 @@ public partial class SharedTasks : ContentPage
         if (!string.IsNullOrEmpty(EntrySharedTask.Text) && SelectedUser != null)
         {
             await CreateTaskAsync();
+            await LoadSharedTasksToCollection();
         }
         else 
         {
@@ -154,7 +162,7 @@ public partial class SharedTasks : ContentPage
                     {
                         await _firebaseClient.Child("SharedTask").Child(LoggedUser.Uid).Child($"{SwipeView.TaskId}").DeleteAsync();
                         await Toast.Make("Task successfully deleted", ToastDuration.Short).Show();
-                        LoadSharedTasksAsync();
+                        await LoadSharedTasksToCollection();
                     }
                 }
             }

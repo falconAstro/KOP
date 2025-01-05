@@ -44,7 +44,7 @@ public partial class ShoppingLists : ContentPage
             RegisteredUserList = await _RegisteredUserList;
             RemoveLoggedUserFromList();//Odstranenie aktualne prihlaseneho usera zo zoznamu
             picker.ItemsSource = RegisteredUserList;
-            LoadShoppingListsAsync();
+            await LoadShoppingListsToCollection();
             await Toast.Make("Loaded data successfully", ToastDuration.Short).Show();
         }
         catch (FirebaseAuthException)
@@ -61,17 +61,25 @@ public partial class ShoppingLists : ContentPage
         }
     }
 
-    public void LoadShoppingListsAsync()//Nacitanie Shopping listov z databazy
+    private async Task LoadShoppingListsToCollection()//Nacitanie shopping listov z pola do observable collection
     {
         ShoppingListList.Clear();
-        _firebaseClient.Child("ShoppingList").Child(LoggedUser.Uid).AsObservable<ShoppingList>().Subscribe((item) =>
+        var _loadedLists = await LoadShoppingListsAsync();
+        foreach (ShoppingList list in _loadedLists)
         {
-            if (item.Object != null)
-            {
-                item.Object.ListId = item.Key;
-                ShoppingListList.Add(item.Object);
-            }
-        });
+            ShoppingListList.Add(list);
+        }
+    }
+
+    private async Task<List<ShoppingList>> LoadShoppingListsAsync()//Nacitanie shopping listov z databazy do pola
+    {
+        return (await _firebaseClient.Child("ShoppingList").Child(LoggedUser.Uid).OnceAsync<ShoppingList>()).Select(item => new ShoppingList
+        {
+            ShoppingItems = item.Object.ShoppingItems,
+            ListId = item.Key,
+            Username = item.Object.Username,
+            Date = item.Object.Date,
+        }).ToList();
     }
 
     public async Task<List<RegisteredUser>> LoadRegisteredUsersAsync()//Nacitanie userov z databazy
@@ -128,6 +136,7 @@ public partial class ShoppingLists : ContentPage
         if (TempShoppingItems.Count>0 && SelectedUser != null)
         {
             await CreateShoppingListAsync();
+            await LoadShoppingListsToCollection();
         }
         else
         {
@@ -173,7 +182,7 @@ public partial class ShoppingLists : ContentPage
                     {
                         await _firebaseClient.Child("ShoppingList").Child(LoggedUser.Uid).Child($"{SwipeView.ListId}").DeleteAsync();
                         await Toast.Make("Shopping list successfully deleted", ToastDuration.Short).Show();
-                        LoadShoppingListsAsync();
+                        await LoadShoppingListsToCollection();
                     }
                 }
             }

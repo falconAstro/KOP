@@ -3,51 +3,53 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TimeManagementApp.Pages.SharedEvents"
              Title="Shared Events">
-    <VerticalStackLayout>
-        <Label 
-            Text="Create a new shared event" 
-            Style="{StaticResource Headline}"/>
-        <DatePicker
-            x:Name="EventDatePicker"
-            Margin="5"/>
-        <Entry 
-            x:Name="EntrySharedEvent" 
-            Placeholder="Enter a new event"
-            Margin="5"/>
-        <Button 
-            x:Name="BtnCreateSharedEvent"  
-            Clicked="BtnCreateSharedEvent_Clicked" 
-            Text="Create Event"
-            Margin="5"/>
-        <Label
-            Text="Current events"
-            Style="{StaticResource Headline}"/>
+    <ScrollView>
+        <VerticalStackLayout>
+            <Label 
+                Text="Create a new shared event" 
+                Style="{StaticResource Headline}"/>
+            <DatePicker
+                x:Name="EventDatePicker"
+                Margin="5"/>
+            <Entry 
+                x:Name="EntrySharedEvent" 
+                Placeholder="Enter a new event"
+                Margin="5"/>
+            <Button 
+                x:Name="BtnCreateSharedEvent"  
+                Clicked="BtnCreateSharedEvent_Clicked" 
+                Text="Create Event"
+                Margin="5"/>
+            <Label
+                Text="Current events"
+                Style="{StaticResource Headline}"/>
         
-        <CollectionView ItemsSource="{Binding SharedEventsList}">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <SwipeView>
-                        <Grid Style="{StaticResource ListGrid}">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="60"/>
-                                <ColumnDefinition Width="340"/>
-                            </Grid.ColumnDefinitions>
-                            <Label Text ="{Binding Event}" Style="{StaticResource ItemLabel}" Grid.Row="0" Grid.ColumnSpan="2"/>
-                            <Label Text="Date:" Style="{StaticResource ItemLabel}" Grid.Row="1" Grid.Column="0"/>
-                            <Label Text ="{Binding Date,StringFormat='{0:dddd, dd MMMM yyyy}'}" Style="{StaticResource ItemLabel}" Grid.Row="1" Grid.Column="1"/>
-                        </Grid>
-                        <SwipeView.RightItems>
-                            <SwipeItems>
-                                <SwipeItem Text="Delete" Invoked="OnDeleteSwipeItemInvoked" BackgroundColor="Red" ></SwipeItem>
-                            </SwipeItems>
-                        </SwipeView.RightItems>
-                    </SwipeView>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-    </VerticalStackLayout> 
+            <CollectionView ItemsSource="{Binding SharedEventsList}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <SwipeView>
+                            <Grid Style="{StaticResource ListGrid}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="75"/>
+                                    <ColumnDefinition Width="325"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Text ="{Binding Event}" Style="{StaticResource ItemLabel}" Grid.Row="0" Grid.ColumnSpan="2"/>
+                                <Label Text="Date:" Style="{StaticResource ItemLabel}" Grid.Row="1" Grid.Column="0"/>
+                                <Label Text ="{Binding Date,StringFormat='{0:dddd, dd MMMM yyyy}'}" Style="{StaticResource ItemLabel}" Grid.Row="1" Grid.Column="1"/>
+                            </Grid>
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Delete" Invoked="OnDeleteSwipeItemInvoked" BackgroundColor="Red" ></SwipeItem>
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

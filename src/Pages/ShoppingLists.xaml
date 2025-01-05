@@ -2,68 +2,70 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TimeManagementApp.Pages.ShoppingLists"
              Title="Shopping Lists">
-    <VerticalStackLayout>
-        <Label 
-            Text="Create a new shopping list" 
-            Style="{StaticResource Headline}"/>
-        <Picker 
-            x:Name="picker"
-            Title="Select a target user"
-            Margin="5"
-            ItemsSource ="{Binding RegisteredUserList}"
-            ItemDisplayBinding="{Binding Username}"
-            SelectedItem="{Binding SelectedUser}"/>
-        <Entry 
-            x:Name="EntryShoppingItem" 
-            Placeholder="Enter shopping item"
-            Margin="5"/>
-        <Button 
-            x:Name="BtnAddShoppingItem"  
-            Clicked="BtnAddShoppingItem_Clicked" 
-            Text="Add item to shopping list"
-            Margin="5"/>
-        <Button 
-            x:Name="BtnCreateShoppingList"  
-            Clicked="BtnCreateShoppingList_Clicked" 
-            Text="Create shopping list"
-            Margin="5"/>
-        <Label
-            Text="My current shopping lists"
-            Style="{StaticResource Headline}"/>
+    <ScrollView>
+        <VerticalStackLayout>
+            <Label 
+                Text="Create a new shopping list" 
+                Style="{StaticResource Headline}"/>
+            <Picker 
+                x:Name="picker"
+                Title="Select a target user"
+                Margin="5"
+                ItemsSource ="{Binding RegisteredUserList}"
+                ItemDisplayBinding="{Binding Username}"
+                SelectedItem="{Binding SelectedUser}"/>
+            <Entry 
+                x:Name="EntryShoppingItem" 
+                Placeholder="Enter shopping item"
+                Margin="5"/>
+            <Button 
+                x:Name="BtnAddShoppingItem"  
+                Clicked="BtnAddShoppingItem_Clicked" 
+                Text="Add item to shopping list"
+                Margin="5"/>
+            <Button 
+                x:Name="BtnCreateShoppingList"  
+                Clicked="BtnCreateShoppingList_Clicked" 
+                Text="Create shopping list"
+                Margin="5"/>
+            <Label
+                Text="My current shopping lists"
+                Style="{StaticResource Headline}"/>
 
-        <CollectionView ItemsSource="{Binding ShoppingListList}">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <SwipeView>
-                        <Grid Style="{StaticResource ListGrid}">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="60"/>
-                                <ColumnDefinition Width="340"/>
-                            </Grid.ColumnDefinitions>
-                            <Label Text = "{Binding Date}" Style="{StaticResource ItemLabel}" Grid.Row="0" Grid.ColumnSpan="2" FontAttributes="Bold"/>
-                            <Label Text="From:" Style="{StaticResource ItemLabel}" Grid.Row="1" Grid.Column="0" FontAttributes="Bold"/>
-                            <Label Text = "{Binding Username}" Style="{StaticResource ItemLabel}" Grid.Row="1" Grid.Column="1" FontAttributes="Italic"/>
-                            <CollectionView ItemsSource="{Binding ShoppingItems}" Grid.ColumnSpan="2" Grid.Row="2">
-                                <CollectionView.ItemTemplate>
-                                    <DataTemplate>
-                                        <Label Text = "{Binding .}" Style="{StaticResource ItemLabel}" Padding="4"/>
-                                    </DataTemplate>
-                                </CollectionView.ItemTemplate>
-                            </CollectionView>
-                        </Grid>
-                        <SwipeView.RightItems>
-                            <SwipeItems>
-                                <SwipeItem Text="Delete" Invoked="OnDeleteSwipeItemInvoked" BackgroundColor="Red" ></SwipeItem>
-                            </SwipeItems>
-                        </SwipeView.RightItems>
-                    </SwipeView>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-    </VerticalStackLayout>
+            <CollectionView ItemsSource="{Binding ShoppingListList}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <SwipeView>
+                            <Grid Style="{StaticResource ListGrid}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="75"/>
+                                    <ColumnDefinition Width="325"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Text = "{Binding Date}" Style="{StaticResource ItemLabel}" Grid.Row="0" Grid.ColumnSpan="2" FontAttributes="Bold"/>
+                                <Label Text="From:" Style="{StaticResource ItemLabel}" Grid.Row="1" Grid.Column="0" FontAttributes="Bold"/>
+                                <Label Text = "{Binding Username}" Style="{StaticResource ItemLabel}" Grid.Row="1" Grid.Column="1" FontAttributes="Italic"/>
+                                <CollectionView ItemsSource="{Binding ShoppingItems}" Grid.ColumnSpan="2" Grid.Row="2">
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Label Text = "{Binding .}" Style="{StaticResource ItemLabel}" Padding="4"/>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </Grid>
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Delete" Invoked="OnDeleteSwipeItemInvoked" BackgroundColor="Red" ></SwipeItem>
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

@@ -3,39 +3,41 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TimeManagementApp.Pages.PersonalTasks"
              Title="Personal Tasks">
-    <VerticalStackLayout>
-        <Label 
-            Text="Create a new personal task"
-            Style="{StaticResource Headline}"/>
-        <Entry 
-            x:Name="EntryPersonalTask" 
-            Placeholder="Enter the new task"
-            Margin="5"/>
-        <Button 
-            x:Name="BtnCreatePersonalTask"  
-            Clicked="BtnCreatePersonalTask_Clicked" 
-            Text="Create Task"
-            Margin="5"/>
-        <Label
-            Text="My current personal tasks"
-            Style="{StaticResource Headline}"/>
-        <!-- zobrazenie zoznamu taskov nacitanych z databazy-->
+    <ScrollView>
+        <VerticalStackLayout>
+            <Label 
+                Text="Create a new personal task"
+                Style="{StaticResource Headline}"/>
+            <Entry 
+                x:Name="EntryPersonalTask" 
+                Placeholder="Enter the new task"
+                Margin="5"/>
+            <Button 
+                x:Name="BtnCreatePersonalTask"  
+                Clicked="BtnCreatePersonalTask_Clicked" 
+                Text="Create Task"
+                Margin="5"/>
+            <Label
+                Text="My current personal tasks"
+                Style="{StaticResource Headline}"/>
+            <!-- zobrazenie zoznamu taskov nacitanych z databazy-->
 
-        <CollectionView ItemsSource="{Binding PersonalTaskList}">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <SwipeView>
-                        <Grid Style="{StaticResource ListGrid}">
-                            <Label Text ="{Binding Task}" Style="{StaticResource ItemLabel}"/>
-                        </Grid>
-                        <SwipeView.RightItems>
-                            <SwipeItems>
-                                <SwipeItem Text="Delete" Invoked="OnDeleteSwipeItemInvoked" BackgroundColor="Red" ></SwipeItem>
-                            </SwipeItems>
-                        </SwipeView.RightItems>
-                    </SwipeView>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-         </CollectionView>
-    </VerticalStackLayout>
+            <CollectionView ItemsSource="{Binding PersonalTaskList}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <SwipeView>
+                            <Grid Style="{StaticResource ListGrid}">
+                                <Label Text ="{Binding Task}" Style="{StaticResource ItemLabel}"/>
+                            </Grid>
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Delete" Invoked="OnDeleteSwipeItemInvoked" BackgroundColor="Red" ></SwipeItem>
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

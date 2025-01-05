@@ -34,7 +34,7 @@ public partial class PersonalTasks : ContentPage
         {
             base.OnNavigatedTo(args);
             LoggedUser = _firebaseAuthClient.User;//Aktualne prihlaseny user
-            LoadTasksAsync();
+            await LoadPersonalTasksToCollection();
             await Toast.Make("Loaded data successfully", ToastDuration.Short).Show();
         }
         catch (FirebaseAuthException)
@@ -51,18 +51,25 @@ public partial class PersonalTasks : ContentPage
         }
     }
 
-    public void LoadTasksAsync()//Nacitanie taskov z databazy
+    private async Task LoadPersonalTasksToCollection()//Nacitanie taskov z pola do observable collection
     {
         PersonalTaskList.Clear();
-        _firebaseClient.Child("PersonalTask").Child(LoggedUser.Uid).AsObservable<PersonalTask>().Subscribe((item) =>
+        var _loadedTasks = await LoadPersonalTasksAsync();
+        foreach (PersonalTask task in _loadedTasks)
         {
-            if (item.Object != null)
-            {
-                item.Object.TaskId = item.Key;
-                PersonalTaskList.Add(item.Object);
-            }
-        });
+            PersonalTaskList.Add(task);
+        }
     }
+
+    private async Task<List<PersonalTask>> LoadPersonalTasksAsync()//Nacitanie taskov z databazy do pola
+    {
+        return (await _firebaseClient.Child("PersonalTask").Child(LoggedUser.Uid).OnceAsync<PersonalTask>()).Select(item => new PersonalTask
+        {
+            Task = item.Object.Task,
+            TaskId = item.Key
+        }).ToList();
+    }
+
     private async Task CreateTaskAsync()//Vytvorenie jednoducheho tasku v databaze
     {
         try
@@ -86,12 +93,14 @@ public partial class PersonalTasks : ContentPage
         if(!string.IsNullOrEmpty(EntryPersonalTask.Text))
         {
             await CreateTaskAsync();
+            await LoadPersonalTasksToCollection();
         }
         else
         {
             await Toast.Make("Enter a task first!", ToastDuration.Short).Show();
         }
     }
+
     private async void OnDeleteSwipeItemInvoked(object sender, EventArgs e)//Vymazavanie jednotlivych taskov
     {
         try
@@ -110,7 +119,7 @@ public partial class PersonalTasks : ContentPage
                     {
                         await _firebaseClient.Child("PersonalTask").Child(LoggedUser.Uid).Child($"{SwipeView.TaskId}").DeleteAsync();
                         await Toast.Make("Task successfully deleted", ToastDuration.Short).Show();
-                        LoadTasksAsync();
+                        await LoadPersonalTasksToCollection();
                     }
                 }
             }
