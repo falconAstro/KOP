@@ -6,7 +6,6 @@ namespace TimeManagementApp
     {
         public AppShell()
         {
-            //Routy jednotlivych stranok
             InitializeComponent();
        
             Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));

@@ -20,8 +20,8 @@
             <Label
                 Text="My current personal tasks"
                 Style="{StaticResource Headline}"/>
+            
             <!-- zobrazenie zoznamu taskov nacitanych z databazy-->
-
             <CollectionView ItemsSource="{Binding PersonalTaskList}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
