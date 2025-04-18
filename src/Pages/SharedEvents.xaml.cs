@@ -1,33 +1,27 @@
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
-using Firebase.Auth;
 using Firebase.Database;
 using Firebase.Database.Query;
 using System.Collections.ObjectModel;
 using TimeManagementApp.Classes;
+using TimeManagementApp.Services;
 
 namespace TimeManagementApp.Pages;
 
 public partial class SharedEvents : ContentPage
 {
     //Firebase clients
-    private readonly FirebaseClient _firebaseClient;
-    private readonly FirebaseAuthClient _firebaseAuthClient;
+    private readonly FirebaseService _firebaseService;
     private DateTime DateNow;//Aktualny datum a cas
     private List<SharedEvent> TempSharedEventsList { get; set; } = [];//Zoznam Shared eventov
     public ObservableCollection<SharedEvent> SharedEventsList { get; set; } = [];//Zoznam zoradenych Shared eventov (pre zobrazenie v UI)
 
     //Konstruktor stranky
-    public SharedEvents(FirebaseClient firebaseClient, FirebaseAuthClient firebaseAuthClient)
+    public SharedEvents(FirebaseService firebaseService)
     {
         InitializeComponent();
         BindingContext = this;
-        _firebaseAuthClient = firebaseAuthClient;
-        _firebaseClient = firebaseClient = new FirebaseClient("https://timemanagement-4d83d-default-rtdb.firebaseio.com/",
-        new FirebaseOptions()
-        {
-            AuthTokenAsyncFactory = () => _firebaseAuthClient.User.GetIdTokenAsync()//Refresh tokenu
-        });
+        _firebaseService = firebaseService;
     }
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)//Vykona sa pri nacitani stranky
     {
@@ -54,7 +48,7 @@ public partial class SharedEvents : ContentPage
         EventDatePicker.MinimumDate = DateNow;
         SharedEventsList.Clear();
         TempSharedEventsList.Clear();
-        var LoadedEvents = await _firebaseClient.Child("SharedEvent").OnceAsync<SharedEvent>();
+        var LoadedEvents = await _firebaseService.Client.Child("SharedEvent").OnceAsync<SharedEvent>();
         foreach(var _event in LoadedEvents)
         {
             var SharedEvent = _event.Object;
@@ -72,7 +66,7 @@ public partial class SharedEvents : ContentPage
     {
         try
         {
-            await _firebaseClient.Child("SharedEvent").PostAsync(new SharedEvent
+            await _firebaseService.Client.Child("SharedEvent").PostAsync(new SharedEvent
             {
                 Event = EntrySharedEvent.Text,
                 Date = EventDatePicker.Date
@@ -116,7 +110,7 @@ public partial class SharedEvents : ContentPage
                 bool isDeletionConfirmed = await DisplayAlert("Delete Event", $"Are you sure you want to delete the event \"{SwipeView.Event}\"?", "Yes", "No");
                 if (isDeletionConfirmed)
                 {
-                    await _firebaseClient.Child("SharedEvent").Child($"{SwipeView.EventId}").DeleteAsync();
+                    await _firebaseService.Client.Child("SharedEvent").Child($"{SwipeView.EventId}").DeleteAsync();
                     await Toast.Make("Event deleted successfully", ToastDuration.Short).Show();
                     await LoadEventsAsync();
                 }

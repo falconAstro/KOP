@@ -4,6 +4,7 @@ using Firebase.Auth;
 using Firebase.Database;
 using Firebase.Database.Query;
 using System.Collections.ObjectModel;
+using TimeManagementApp.Services;
 using TimeManagementApp.Classes;
 
 namespace TimeManagementApp.Pages;
@@ -11,24 +12,18 @@ namespace TimeManagementApp.Pages;
 public partial class SharedTasks : ContentPage
 {
     //Firebase clients
-    private readonly FirebaseAuthClient _firebaseAuthClient;
-    private readonly FirebaseClient _firebaseClient;
+    private readonly FirebaseService _firebaseService;
     public List<RegisteredUser> RegisteredUserList { get; set; } = [];//Zoznam userov nacitavanych z DB (pre picker)
     public ObservableCollection<SharedTask> SharedTaskList { get; set; } = [];//Zoznam Taskov nacitavanych z DB
     public User LoggedUser { get; set; }//Aktualne prihlaseny user
     public RegisteredUser SelectedUser { get; set; }//User vybraty v pickeri
 
     //Konstruktor stranky
-    public SharedTasks(FirebaseClient firebaseClient, FirebaseAuthClient firebaseAuthClient)
+    public SharedTasks(FirebaseService firebaseService)
 	{
 		InitializeComponent();
         BindingContext = this;
-        _firebaseAuthClient = firebaseAuthClient;
-        _firebaseClient = firebaseClient = new FirebaseClient("https://timemanagement-4d83d-default-rtdb.firebaseio.com/",
-        new FirebaseOptions()
-        {
-            AuthTokenAsyncFactory = () => _firebaseAuthClient.User.GetIdTokenAsync()//Refresh tokenu
-        });
+        _firebaseService = firebaseService;
     }
 
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)//Vykona sa pri nacitani stranky
@@ -36,7 +31,7 @@ public partial class SharedTasks : ContentPage
         try
         {
             base.OnNavigatedTo(args);
-            LoggedUser = _firebaseAuthClient.User;//Aktualne prihlaseny user
+            LoggedUser = _firebaseService.AuthClient.User;//Aktualne prihlaseny user
             //Nacitanie pouzivatelov do zoznamu pre picker
             var _RegisteredUserList = LoadRegisteredUsersAsync();
             RegisteredUserList.Clear();
@@ -72,7 +67,7 @@ public partial class SharedTasks : ContentPage
 
     private async Task<List<SharedTask>> LoadSharedTasksAsync()//Nacitanie shared taskov z databazy do pola
     {
-        return (await _firebaseClient.Child("SharedTask").Child(LoggedUser.Uid).OnceAsync<SharedTask>()).Select(item => new SharedTask
+        return (await _firebaseService.Client.Child("SharedTask").Child(LoggedUser.Uid).OnceAsync<SharedTask>()).Select(item => new SharedTask
         {
             Task = item.Object.Task,
             TaskId = item.Key,
@@ -82,7 +77,7 @@ public partial class SharedTasks : ContentPage
 
     private async Task<List<RegisteredUser>> LoadRegisteredUsersAsync()//Nacitanie userov z databazy
     {
-        return (await _firebaseClient.Child("RegisteredUsers").OnceAsync<RegisteredUser>()).Select(item => new RegisteredUser
+        return (await _firebaseService.Client.Child("RegisteredUsers").OnceAsync<RegisteredUser>()).Select(item => new RegisteredUser
         {
             Username = item.Object.Username,
             UserId = item.Object.UserId,
@@ -94,7 +89,7 @@ public partial class SharedTasks : ContentPage
     {
         try
         {
-            await _firebaseClient.Child("SharedTask").Child(SelectedUser.UserId).PostAsync(new SharedTask { Task = EntrySharedTask.Text, Username = LoggedUser.Info.DisplayName });
+            await _firebaseService.Client.Child("SharedTask").Child(SelectedUser.UserId).PostAsync(new SharedTask { Task = EntrySharedTask.Text, Username = LoggedUser.Info.DisplayName });
             EntrySharedTask.Text = string.Empty;
             picker.SelectedItem = null;
             await Toast.Make("Task created successfully", ToastDuration.Short).Show();
@@ -157,7 +152,7 @@ public partial class SharedTasks : ContentPage
                 bool isDeletionConfirmed = await DisplayAlert("Delete Task", $"Are you sure you want to delete the task \"{SwipeView.Task}\"?", "Yes", "No");
                 if (isDeletionConfirmed)
                 {
-                    await _firebaseClient.Child("SharedTask").Child(LoggedUser.Uid).Child($"{SwipeView.TaskId}").DeleteAsync();
+                    await _firebaseService.Client.Child("SharedTask").Child(LoggedUser.Uid).Child($"{SwipeView.TaskId}").DeleteAsync();
                     await Toast.Make("Task successfully deleted", ToastDuration.Short).Show();
                     await LoadSharedTasksToCollection();
                 }

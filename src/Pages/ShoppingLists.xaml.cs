@@ -5,14 +5,14 @@ using System.Collections.ObjectModel;
 using TimeManagementApp.Classes;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
+using TimeManagementApp.Services;
 
 namespace TimeManagementApp.Pages;
 
 public partial class ShoppingLists : ContentPage
 {
     //Firebase clients
-    private readonly FirebaseAuthClient _firebaseAuthClient;
-    private readonly FirebaseClient _firebaseClient;
+    private readonly FirebaseService _firebaseService;
     public User LoggedUser { get; set; }//Aktualne prihlaseny user
     public RegisteredUser SelectedUser { get; set; }//User vybraty v pickeri
     public List<string> TempShoppingItems { get; set; } = [];//Zoznam itemov pri vytvarani noveho Shopping listu
@@ -20,16 +20,11 @@ public partial class ShoppingLists : ContentPage
     public List<RegisteredUser> RegisteredUserList { get; set; } = [];//Zoznam userov nacitavanych z DB
 
     //Konstruktor stranky
-    public ShoppingLists(FirebaseClient firebaseClient, FirebaseAuthClient firebaseAuthClient)
+    public ShoppingLists(FirebaseService firebaseService)
     {
         InitializeComponent();
         BindingContext = this;
-        _firebaseAuthClient = firebaseAuthClient;
-        _firebaseClient = firebaseClient = new FirebaseClient("https://timemanagement-4d83d-default-rtdb.firebaseio.com/",
-        new FirebaseOptions()
-        {
-            AuthTokenAsyncFactory = () => _firebaseAuthClient.User.GetIdTokenAsync()//Refresh tokenu
-        });
+        _firebaseService = firebaseService;
     }
 
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)//Vykona sa pri nacitani stranky
@@ -37,7 +32,7 @@ public partial class ShoppingLists : ContentPage
         try
         {
             base.OnNavigatedTo(args);
-            LoggedUser = _firebaseAuthClient.User;//Aktualne prihlaseny user
+            LoggedUser = _firebaseService.AuthClient.User;//Aktualne prihlaseny user
             //Nacitanie pouzivatelov do zoznamu pre picker
             var _RegisteredUserList = LoadRegisteredUsersAsync();
             RegisteredUserList.Clear();
@@ -73,7 +68,7 @@ public partial class ShoppingLists : ContentPage
 
     private async Task<List<ShoppingList>> LoadShoppingListsAsync()//Nacitanie shopping listov z databazy do pola
     {
-        return (await _firebaseClient.Child("ShoppingList").Child(LoggedUser.Uid).OnceAsync<ShoppingList>()).Select(item => new ShoppingList
+        return (await _firebaseService.Client.Child("ShoppingList").Child(LoggedUser.Uid).OnceAsync<ShoppingList>()).Select(item => new ShoppingList
         {
             ShoppingItems = item.Object.ShoppingItems,
             ListId = item.Key,
@@ -84,7 +79,7 @@ public partial class ShoppingLists : ContentPage
 
     public async Task<List<RegisteredUser>> LoadRegisteredUsersAsync()//Nacitanie userov z databazy
     {
-        return (await _firebaseClient.Child("RegisteredUsers").OnceAsync<RegisteredUser>()).Select(item => new RegisteredUser
+        return (await _firebaseService.Client.Child("RegisteredUsers").OnceAsync<RegisteredUser>()).Select(item => new RegisteredUser
         {
             Username = item.Object.Username,
             UserId = item.Object.UserId,
@@ -113,7 +108,7 @@ public partial class ShoppingLists : ContentPage
             bool isCreationConfirmed = await DisplayAlert("Create Shopping List", $"Are you sure you want to create this shopping list?", "Yes", "No");
             if (isCreationConfirmed)
             {
-                await _firebaseClient.Child("ShoppingList").Child(SelectedUser.UserId).PostAsync(new ShoppingList { ShoppingItems = TempShoppingItems, Username = LoggedUser.Info.DisplayName, Date = DateTime.Now.ToString("ddd dd.MM.yyyy HH:mm") });
+                await _firebaseService.Client.Child("ShoppingList").Child(SelectedUser.UserId).PostAsync(new ShoppingList { ShoppingItems = TempShoppingItems, Username = LoggedUser.Info.DisplayName, Date = DateTime.Now.ToString("ddd dd.MM.yyyy HH:mm") });
                 await Toast.Make("Shopping list created", ToastDuration.Short).Show();
                 picker.SelectedItem = null;
                 TempShoppingItems.Clear();
@@ -175,7 +170,7 @@ public partial class ShoppingLists : ContentPage
                 bool isDeletionConfirmed = await DisplayAlert("Delete Shopping List", $"Are you sure you want to delete this shopping list?", "Yes", "No");
                 if (isDeletionConfirmed)
                 {
-                    await _firebaseClient.Child("ShoppingList").Child(LoggedUser.Uid).Child($"{SwipeView.ListId}").DeleteAsync();
+                    await _firebaseService. Client.Child("ShoppingList").Child(LoggedUser.Uid).Child($"{SwipeView.ListId}").DeleteAsync();
                     await Toast.Make("Shopping list successfully deleted", ToastDuration.Short).Show();
                     await LoadShoppingListsToCollection();
                 }

@@ -4,25 +4,20 @@ using Firebase.Auth;
 using Firebase.Database;
 using Firebase.Database.Query;
 using TimeManagementApp.Classes;
+using TimeManagementApp.Services;
 
 namespace TimeManagementApp.Pages;
 
 public partial class SignUpPage : ContentPage
 {
     //Firebase clients
-    private readonly FirebaseAuthClient _firebaseAuthClient;
-    private readonly FirebaseClient _firebaseClient;
+    private readonly FirebaseService _firebaseService;
 
     //Konstruktor stranky
-    public SignUpPage(FirebaseAuthClient firebaseAuthClient, FirebaseClient firebaseClient)
+    public SignUpPage(FirebaseService firebaseService)
 	{
 		InitializeComponent();
-        _firebaseAuthClient = firebaseAuthClient;
-        _firebaseClient = firebaseClient = new FirebaseClient("https://timemanagement-4d83d-default-rtdb.firebaseio.com/",
-        new FirebaseOptions()
-        {
-            AuthTokenAsyncFactory = () => _firebaseAuthClient.User.GetIdTokenAsync()//Refresh tokenu
-        });
+        _firebaseService = firebaseService;
     }
 
     protected override void OnNavigatedTo(NavigatedToEventArgs args)//Vykona sa pri nacitani stranky 
@@ -51,13 +46,13 @@ public partial class SignUpPage : ContentPage
                 return;
             }
             //Vytvorenie pouzivatela
-            var credentials = await _firebaseAuthClient.CreateUserWithEmailAndPasswordAsync(email: EntryEMail.Text, password: EntryPassword.Text, displayName: EntryUsername.Text);
+            var credentials = await _firebaseService.AuthClient.CreateUserWithEmailAndPasswordAsync(email: EntryEMail.Text, password: EntryPassword.Text, displayName: EntryUsername.Text);
             //Log in z dovodu pridania noveho uctu do DB
-            await _firebaseAuthClient.SignInWithEmailAndPasswordAsync(email: EntryEMail.Text, password: EntryPassword.Text);
-            var LoggedUser = _firebaseAuthClient.User;//Aktualne prihlaseny user
+            await _firebaseService.AuthClient.SignInWithEmailAndPasswordAsync(email: EntryEMail.Text, password: EntryPassword.Text);
+            var LoggedUser = _firebaseService.AuthClient.User;//Aktualne prihlaseny user
                                                       //Vytvorenie objektu registered user v DB
-            await _firebaseClient.Child("RegisteredUsers").PostAsync(new RegisteredUser { Username = EntryUsername.Text, UserId = LoggedUser.Uid, Email = EntryEMail.Text });
-            _firebaseAuthClient.SignOut();//Log out
+            await _firebaseService.Client.Child("RegisteredUsers").PostAsync(new RegisteredUser { Username = EntryUsername.Text, UserId = LoggedUser.Uid, Email = EntryEMail.Text });
+            _firebaseService.AuthClient.SignOut();//Log out
             await Toast.Make("Signed up succesfully", ToastDuration.Short).Show();
             await Shell.Current.GoToAsync("..");//Navrat na Log In page
         }

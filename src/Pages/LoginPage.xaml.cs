@@ -1,26 +1,20 @@
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using Firebase.Auth;
-using Firebase.Database;
+using TimeManagementApp.Services;
 
 namespace TimeManagementApp.Pages;
 
 public partial class LoginPage : ContentPage
 {
     //Firebase clients
-    private FirebaseAuthClient _firebaseAuthClient;
-    private FirebaseClient _firebaseClient;
+    private readonly FirebaseService _firebaseService;
 
     //Konstruktor stranky
-    public LoginPage(FirebaseAuthClient firebaseAuthClient, FirebaseClient firebaseClient)
+    public LoginPage(FirebaseService firebaseService)
 	{
 		InitializeComponent();
-        _firebaseAuthClient = firebaseAuthClient;
-        _firebaseClient = firebaseClient = new FirebaseClient("https://timemanagement-4d83d-default-rtdb.firebaseio.com/",
-        new FirebaseOptions()
-        {
-                AuthTokenAsyncFactory = () => _firebaseAuthClient.User.GetIdTokenAsync() //Refresh tokenu
-            });
+        _firebaseService = firebaseService;
     }
 
     protected override void OnNavigatedTo(NavigatedToEventArgs args)//Vykona sa pri nacitani stranky 
@@ -36,7 +30,7 @@ public partial class LoginPage : ContentPage
         try
         {
             //Prihlasenie
-            await _firebaseAuthClient.SignInWithEmailAndPasswordAsync(email: EntryEMail.Text, password: EntryPassword.Text);
+            await _firebaseService.AuthClient.SignInWithEmailAndPasswordAsync(email: EntryEMail.Text, password: EntryPassword.Text);
             await Toast.Make("Signed in succesfully", ToastDuration.Short).Show();
             //Otvorenie taskov
             await Shell.Current.GoToAsync($"//{nameof(PersonalTasks)}");

@@ -5,27 +5,23 @@ using Firebase.Database;
 using Firebase.Database.Query;
 using System.Collections.ObjectModel;
 using TimeManagementApp.Classes;
+using TimeManagementApp.Services;
+
 namespace TimeManagementApp.Pages;
 
 public partial class PersonalTasks : ContentPage
 {
     //Firebase clients
-    private readonly FirebaseAuthClient _firebaseAuthClient;
-    private readonly FirebaseClient _firebaseClient;
+    private readonly FirebaseService _firebaseService;
     public ObservableCollection<PersonalTask> PersonalTaskList { get; set; } = []; //Zoznam Taskov nacitavanych z DB
     public User LoggedUser { get; set; } //Premenna (neskor) obsahujuca aktualne prihlaseneho usera
 
     //Konstruktor stranky
-    public PersonalTasks(FirebaseClient firebaseClient, FirebaseAuthClient firebaseAuthClient)
+    public PersonalTasks(FirebaseService firebaseService)
 	{
 		InitializeComponent();
         BindingContext = this;
-        _firebaseAuthClient = firebaseAuthClient;
-        _firebaseClient = firebaseClient = new FirebaseClient("https://timemanagement-4d83d-default-rtdb.firebaseio.com/",
-            new FirebaseOptions()
-            {
-                AuthTokenAsyncFactory = () => _firebaseAuthClient.User.GetIdTokenAsync()//Refresh tokenu
-            });
+        _firebaseService = firebaseService;
     }
 
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)//Vykona sa pri nacitani stranky 
@@ -33,7 +29,7 @@ public partial class PersonalTasks : ContentPage
         try
         {
             base.OnNavigatedTo(args);
-            LoggedUser = _firebaseAuthClient.User;//Aktualne prihlaseny user
+            LoggedUser = _firebaseService.AuthClient.User;//Aktualne prihlaseny user
             await LoadPersonalTasksToCollection();
             await Toast.Make("Loaded data successfully", ToastDuration.Short).Show();
         }
@@ -63,7 +59,7 @@ public partial class PersonalTasks : ContentPage
 
     private async Task<List<PersonalTask>> LoadPersonalTasksAsync()//Nacitanie taskov z databazy do pola
     {
-        return (await _firebaseClient.Child("PersonalTask").Child(LoggedUser.Uid).OnceAsync<PersonalTask>()).Select(item => new PersonalTask
+        return (await _firebaseService.Client.Child("PersonalTask").Child(LoggedUser.Uid).OnceAsync<PersonalTask>()).Select(item => new PersonalTask
         {
             Task = item.Object.Task,
             TaskId = item.Key
@@ -74,7 +70,7 @@ public partial class PersonalTasks : ContentPage
     {
         try
         {
-            await _firebaseClient.Child("PersonalTask").Child(LoggedUser.Uid).PostAsync(new PersonalTask { Task = EntryPersonalTask.Text });
+            await _firebaseService.Client.Child("PersonalTask").Child(LoggedUser.Uid).PostAsync(new PersonalTask { Task = EntryPersonalTask.Text });
             EntryPersonalTask.Text = string.Empty;
             await Toast.Make("Task successfully created", ToastDuration.Long).Show();
         }
@@ -114,7 +110,7 @@ public partial class PersonalTasks : ContentPage
                 bool isDeletionConfirmed = await DisplayAlert("Delete Task", $"Are you sure you want to delete the task \"{SwipeView.Task}\"?", "Yes", "No");
                 if (isDeletionConfirmed)
                     {
-                     await _firebaseClient.Child("PersonalTask").Child(LoggedUser.Uid).Child($"{SwipeView.TaskId}").DeleteAsync();
+                     await _firebaseService.Client.Child("PersonalTask").Child(LoggedUser.Uid).Child($"{SwipeView.TaskId}").DeleteAsync();
                      await Toast.Make("Task successfully deleted", ToastDuration.Short).Show();
                      await LoadPersonalTasksToCollection();
                     }

@@ -1,20 +1,20 @@
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using Firebase.Auth;
-using Firebase.Database;
+using TimeManagementApp.Services;
 
 namespace TimeManagementApp.Pages;
 
 public partial class SettingsPage : ContentPage
 {
     //Firebase client
-    private readonly FirebaseAuthClient _firebaseAuthClient;
+    private readonly FirebaseService _firebaseService;
 
     //Konstruktor stranky
-    public SettingsPage(FirebaseAuthClient firebaseAuthClient)
+    public SettingsPage(FirebaseService firebaseService)
 	{
 		InitializeComponent();
-        _firebaseAuthClient = firebaseAuthClient;
+        _firebaseService = firebaseService;
     }
 
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)//Vykona sa pri nacitani stranky 
@@ -23,7 +23,7 @@ public partial class SettingsPage : ContentPage
         {
             base.OnNavigatedTo(args);
             //Nacitanie logged usera a jeho udajov
-            var LoggedUser = _firebaseAuthClient.User;
+            var LoggedUser = _firebaseService.AuthClient.User;
             UsernameLabel.Text = LoggedUser.Info.DisplayName;
             EmailLabel.Text = LoggedUser.Info.Email;
             IdLabel.Text = LoggedUser.Uid;
@@ -45,7 +45,7 @@ public partial class SettingsPage : ContentPage
             bool isSignOutConfirmed = await DisplayAlert("Sign out", $"Are you sure you want to sign out?", "Yes", "No");
             if (isSignOutConfirmed) 
             {
-                _firebaseAuthClient.SignOut();
+                _firebaseService.AuthClient.SignOut();
                 await Toast.Make("User signed out succesfully", ToastDuration.Long).Show();
                 await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
             }
