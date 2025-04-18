@@ -37,7 +37,7 @@ public partial class ShoppingLists : ContentPage
             var _RegisteredUserList = LoadRegisteredUsersAsync();
             RegisteredUserList.Clear();
             RegisteredUserList = await _RegisteredUserList;
-            RemoveLoggedUserFromList();//Odstranenie aktualne prihlaseneho usera zo zoznamu
+            await RemoveLoggedUserFromList();//Odstranenie aktualne prihlaseneho usera zo zoznamu
             picker.ItemsSource = RegisteredUserList;
             await LoadShoppingListsToCollection();
             await Toast.Make("Loaded data successfully", ToastDuration.Short).Show();
@@ -144,7 +144,7 @@ public partial class ShoppingLists : ContentPage
             SelectedUser = (RegisteredUser)picker.ItemsSource[selectedIndex];
         }
     }
-    public void RemoveLoggedUserFromList()//Odstranenie aktualne prihlaseneho usera zo zoznamu
+    public async Task RemoveLoggedUserFromList()//Odstranenie aktualne prihlaseneho usera zo zoznamu
     {
         foreach (RegisteredUser ListUser in RegisteredUserList)
         {

@@ -36,7 +36,7 @@ public partial class SharedTasks : ContentPage
             var _RegisteredUserList = LoadRegisteredUsersAsync();
             RegisteredUserList.Clear();
             RegisteredUserList = await _RegisteredUserList;
-            RemoveLoggedUserFromList();//Odstranenie aktualne prihlaseneho usera zo zoznamu
+            await RemoveLoggedUserFromList();//Odstranenie aktualne prihlaseneho usera zo zoznamu
             picker.ItemsSource = RegisteredUserList;
             await LoadSharedTasksToCollection();
             await Toast.Make("Loaded data successfully", ToastDuration.Long).Show();
@@ -125,7 +125,7 @@ public partial class SharedTasks : ContentPage
         }
     }
 
-    private void RemoveLoggedUserFromList()//Odstranenie aktualne prihlaseneho usera zo zoznamu
+    private async Task RemoveLoggedUserFromList()//Odstranenie aktualne prihlaseneho usera zo zoznamu
     {
         foreach (RegisteredUser ListUser in RegisteredUserList)
         {
