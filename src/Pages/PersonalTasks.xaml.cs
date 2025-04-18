@@ -90,15 +90,13 @@ public partial class PersonalTasks : ContentPage
 
     private async void BtnCreatePersonalTask_Clicked(object sender, EventArgs e)
     {
-        if(!string.IsNullOrEmpty(EntryPersonalTask.Text))
-        {
-            await CreateTaskAsync();
-            await LoadPersonalTasksToCollection();
-        }
-        else
+        if(string.IsNullOrEmpty(EntryPersonalTask.Text))
         {
             await Toast.Make("Enter a task first!", ToastDuration.Short).Show();
+            return;
         }
+        await CreateTaskAsync();
+        await LoadPersonalTasksToCollection();
     }
 
     private async void OnDeleteSwipeItemInvoked(object sender, EventArgs e)//Vymazavanie jednotlivych taskov
@@ -111,17 +109,15 @@ public partial class PersonalTasks : ContentPage
                 if (SwipeView == null)
                 {
                     await Toast.Make("Failed to identify item for deletion", ToastDuration.Short).Show();
+                    return;
                 }
-                else
-                {
-                    bool isDeletionConfirmed = await DisplayAlert("Delete Task", $"Are you sure you want to delete the task \"{SwipeView.Task}\"?", "Yes", "No");
-                    if (isDeletionConfirmed)
+                bool isDeletionConfirmed = await DisplayAlert("Delete Task", $"Are you sure you want to delete the task \"{SwipeView.Task}\"?", "Yes", "No");
+                if (isDeletionConfirmed)
                     {
-                        await _firebaseClient.Child("PersonalTask").Child(LoggedUser.Uid).Child($"{SwipeView.TaskId}").DeleteAsync();
-                        await Toast.Make("Task successfully deleted", ToastDuration.Short).Show();
-                        await LoadPersonalTasksToCollection();
+                     await _firebaseClient.Child("PersonalTask").Child(LoggedUser.Uid).Child($"{SwipeView.TaskId}").DeleteAsync();
+                     await Toast.Make("Task successfully deleted", ToastDuration.Short).Show();
+                     await LoadPersonalTasksToCollection();
                     }
-                }
             }
         }
         catch(FirebaseException)

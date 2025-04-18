@@ -94,15 +94,13 @@ public partial class ShoppingLists : ContentPage
 
     private async Task AddItemToList()//Pridanie itemu do zoznamu
     {
-        if (!string.IsNullOrEmpty(EntryShoppingItem.Text))
-        {
-            TempShoppingItems.Add(EntryShoppingItem.Text);
-            EntryShoppingItem.Text = string.Empty;
-        }
-        else
+        if (string.IsNullOrEmpty(EntryShoppingItem.Text))
         {
             await Toast.Make("Enter an item first!", ToastDuration.Short).Show();
+            return;
         }
+        TempShoppingItems.Add(EntryShoppingItem.Text);
+        EntryShoppingItem.Text = string.Empty;
     }
     private async void BtnAddShoppingItem_Clicked(object sender, EventArgs e)
     {
@@ -133,15 +131,13 @@ public partial class ShoppingLists : ContentPage
 
     private async void BtnCreateShoppingList_Clicked(object sender, EventArgs e)
     {
-        if (TempShoppingItems.Count>0 && SelectedUser != null)
-        {
-            await CreateShoppingListAsync();
-            await LoadShoppingListsToCollection();
-        }
-        else
+        if (TempShoppingItems.Count==0 && SelectedUser == null)
         {
             await Toast.Make("Enter items and pick a user first!", ToastDuration.Short).Show();
+            return;
         }
+        await CreateShoppingListAsync();
+        await LoadShoppingListsToCollection();
     }
 
     void OnPickerSelectedIndexChanged(object sender, EventArgs e)//Vybratie Shopping listu v pickeri
@@ -174,16 +170,14 @@ public partial class ShoppingLists : ContentPage
                 if (SwipeView == null)
                 {
                     await DisplayAlert("Error", "Failed to identify the item to delete.", "OK");
+                    return;
                 }
-                else
+                bool isDeletionConfirmed = await DisplayAlert("Delete Shopping List", $"Are you sure you want to delete this shopping list?", "Yes", "No");
+                if (isDeletionConfirmed)
                 {
-                    bool isDeletionConfirmed = await DisplayAlert("Delete Shopping List", $"Are you sure you want to delete this shopping list?", "Yes", "No");
-                    if (isDeletionConfirmed)
-                    {
-                        await _firebaseClient.Child("ShoppingList").Child(LoggedUser.Uid).Child($"{SwipeView.ListId}").DeleteAsync();
-                        await Toast.Make("Shopping list successfully deleted", ToastDuration.Short).Show();
-                        await LoadShoppingListsToCollection();
-                    }
+                    await _firebaseClient.Child("ShoppingList").Child(LoggedUser.Uid).Child($"{SwipeView.ListId}").DeleteAsync();
+                    await Toast.Make("Shopping list successfully deleted", ToastDuration.Short).Show();
+                    await LoadShoppingListsToCollection();
                 }
             }
         }

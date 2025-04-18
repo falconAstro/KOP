@@ -111,15 +111,13 @@ public partial class SharedTasks : ContentPage
 
     private async void BtnCreateSharedTask_Clicked(object sender, EventArgs e)
     {
-        if (!string.IsNullOrEmpty(EntrySharedTask.Text) && SelectedUser != null)
-        {
-            await CreateTaskAsync();
-            await LoadSharedTasksToCollection();
-        }
-        else 
+        if (string.IsNullOrEmpty(EntrySharedTask.Text) && SelectedUser == null)
         {
             await Toast.Make("Enter a task and pick a user first!", ToastDuration.Short).Show();
+            return;
         }
+        await CreateTaskAsync();
+        await LoadSharedTasksToCollection();
     }
 
     void OnPickerSelectedIndexChanged(object sender, EventArgs e)//Vybratie Usera v pickeri
@@ -154,16 +152,14 @@ public partial class SharedTasks : ContentPage
                 if (SwipeView == null)
                 {
                     await Toast.Make("Failed to identify item for deletion", ToastDuration.Short).Show();
+                    return;
                 }
-                else
+                bool isDeletionConfirmed = await DisplayAlert("Delete Task", $"Are you sure you want to delete the task \"{SwipeView.Task}\"?", "Yes", "No");
+                if (isDeletionConfirmed)
                 {
-                    bool isDeletionConfirmed = await DisplayAlert("Delete Task", $"Are you sure you want to delete the task \"{SwipeView.Task}\"?", "Yes", "No");
-                    if (isDeletionConfirmed)
-                    {
-                        await _firebaseClient.Child("SharedTask").Child(LoggedUser.Uid).Child($"{SwipeView.TaskId}").DeleteAsync();
-                        await Toast.Make("Task successfully deleted", ToastDuration.Short).Show();
-                        await LoadSharedTasksToCollection();
-                    }
+                    await _firebaseClient.Child("SharedTask").Child(LoggedUser.Uid).Child($"{SwipeView.TaskId}").DeleteAsync();
+                    await Toast.Make("Task successfully deleted", ToastDuration.Short).Show();
+                    await LoadSharedTasksToCollection();
                 }
             }
         }

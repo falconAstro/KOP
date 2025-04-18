@@ -93,14 +93,12 @@ public partial class SharedEvents : ContentPage
 
     private async void BtnCreateSharedEvent_Clicked(object sender, EventArgs e)
     {
-        if (!string.IsNullOrEmpty(EntrySharedEvent.Text))
-        {
-            await CreateEventAsync();
-        }
-        else
+        if (string.IsNullOrEmpty(EntrySharedEvent.Text))
         {
             await Toast.Make("Enter an event and pick a date first!", ToastDuration.Short).Show();
+            return;
         }
+        await CreateEventAsync();
     }
 
     private async void OnDeleteSwipeItemInvoked(object sender, EventArgs e)//Vymazavanie jednotlivych Shared eventov
@@ -113,16 +111,14 @@ public partial class SharedEvents : ContentPage
                 if (SwipeView == null)
                 {
                     await DisplayAlert("Error", "Failed to identify the item to delete.", "OK");
+                    return;
                 }
-                else
+                bool isDeletionConfirmed = await DisplayAlert("Delete Event", $"Are you sure you want to delete the event \"{SwipeView.Event}\"?", "Yes", "No");
+                if (isDeletionConfirmed)
                 {
-                    bool isDeletionConfirmed = await DisplayAlert("Delete Event", $"Are you sure you want to delete the event \"{SwipeView.Event}\"?", "Yes", "No");
-                    if (isDeletionConfirmed)
-                    {
-                        await _firebaseClient.Child("SharedEvent").Child($"{SwipeView.EventId}").DeleteAsync();
-                        await Toast.Make("Event deleted successfully", ToastDuration.Short).Show();
-                        await LoadEventsAsync();
-                    }
+                    await _firebaseClient.Child("SharedEvent").Child($"{SwipeView.EventId}").DeleteAsync();
+                    await Toast.Make("Event deleted successfully", ToastDuration.Short).Show();
+                    await LoadEventsAsync();
                 }
             }
         }

@@ -42,25 +42,24 @@ public partial class SignUpPage : ContentPage
             if(EntryUsername.Text == string.Empty)//Overenie ci uzivatel zadal Username
             {
                 await Toast.Make("Enter a username first!", ToastDuration.Short).Show();
+                return;
             }
             //Porovnanie oboch password entry
-            else if (EntryPassword.Text == EntryRepeatedPassword.Text)
-            {
-                //Vytvorenie pouzivatela
-                var credentials = await _firebaseAuthClient.CreateUserWithEmailAndPasswordAsync(email:EntryEMail.Text, password:EntryPassword.Text, displayName:EntryUsername.Text);
-                //Log in z dovodu pridania noveho uctu do DB
-                await _firebaseAuthClient.SignInWithEmailAndPasswordAsync(email: EntryEMail.Text, password: EntryPassword.Text);
-                var LoggedUser = _firebaseAuthClient.User;//Aktualne prihlaseny user
-                //Vytvorenie objektu registered user v DB
-                await _firebaseClient.Child("RegisteredUsers").PostAsync(new RegisteredUser{Username=EntryUsername.Text, UserId = LoggedUser.Uid, Email=EntryEMail.Text});
-                _firebaseAuthClient.SignOut();//Log out
-                await Toast.Make("Signed up succesfully", ToastDuration.Short).Show();
-                await Shell.Current.GoToAsync("..");//Navrat na Log In page
-            }
-            else
+            else if (EntryPassword.Text != EntryRepeatedPassword.Text)
             {
                 await Toast.Make("Passwords do not match!", ToastDuration.Short).Show();
+                return;
             }
+            //Vytvorenie pouzivatela
+            var credentials = await _firebaseAuthClient.CreateUserWithEmailAndPasswordAsync(email: EntryEMail.Text, password: EntryPassword.Text, displayName: EntryUsername.Text);
+            //Log in z dovodu pridania noveho uctu do DB
+            await _firebaseAuthClient.SignInWithEmailAndPasswordAsync(email: EntryEMail.Text, password: EntryPassword.Text);
+            var LoggedUser = _firebaseAuthClient.User;//Aktualne prihlaseny user
+                                                      //Vytvorenie objektu registered user v DB
+            await _firebaseClient.Child("RegisteredUsers").PostAsync(new RegisteredUser { Username = EntryUsername.Text, UserId = LoggedUser.Uid, Email = EntryEMail.Text });
+            _firebaseAuthClient.SignOut();//Log out
+            await Toast.Make("Signed up succesfully", ToastDuration.Short).Show();
+            await Shell.Current.GoToAsync("..");//Navrat na Log In page
         }
         catch (FirebaseAuthException)//Errory spojene s Firebase Auth systemom (nespravny email, atd)
         {
