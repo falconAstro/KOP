@@ -16,7 +16,7 @@
             Margin="6"/>
         <Label Text="App information"
                Style="{StaticResource Headline}"/>
-        <Label Text="Alpha 1.1"
+        <Label Text="Beta 1.0"
                Margin="5"/>
     </VerticalStackLayout>
 </ContentPage>

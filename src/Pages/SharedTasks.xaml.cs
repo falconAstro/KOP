@@ -106,7 +106,7 @@ public partial class SharedTasks : ContentPage
 
     private async void BtnCreateSharedTask_Clicked(object sender, EventArgs e)
     {
-        if (string.IsNullOrEmpty(EntrySharedTask.Text) && SelectedUser == null)
+        if (string.IsNullOrEmpty(EntrySharedTask.Text) || SelectedUser == null)
         {
             await Toast.Make("Enter a task and pick a user first!", ToastDuration.Short).Show();
             return;

@@ -126,7 +126,7 @@ public partial class ShoppingLists : ContentPage
 
     private async void BtnCreateShoppingList_Clicked(object sender, EventArgs e)
     {
-        if (TempShoppingItems.Count==0 && SelectedUser == null)
+        if (TempShoppingItems.Count==0 || SelectedUser == null)
         {
             await Toast.Make("Enter items and pick a user first!", ToastDuration.Short).Show();
             return;
