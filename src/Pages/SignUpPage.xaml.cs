@@ -50,7 +50,7 @@ public partial class SignUpPage : ContentPage
             //Log in z dovodu pridania noveho uctu do DB
             await _firebaseService.AuthClient.SignInWithEmailAndPasswordAsync(email: EntryEMail.Text, password: EntryPassword.Text);
             var LoggedUser = _firebaseService.AuthClient.User;//Aktualne prihlaseny user
-                                                      //Vytvorenie objektu registered user v DB
+            //Vytvorenie objektu registered user v DB
             await _firebaseService.Client.Child("RegisteredUsers").PostAsync(new RegisteredUser { Username = EntryUsername.Text, UserId = LoggedUser.Uid, Email = EntryEMail.Text });
             _firebaseService.AuthClient.SignOut();//Log out
             await Toast.Make("Signed up succesfully", ToastDuration.Short).Show();

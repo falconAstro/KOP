@@ -207,7 +207,7 @@
 
     <Style TargetType="Grid" x:Key="ListGrid">
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource Gray500}}"/>
-        <Setter Property="Padding" Value="1"/>
+        <Setter Property="Padding" Value="0,1,0,1"/>
     </Style>
 
     <Style TargetType="ListView">
