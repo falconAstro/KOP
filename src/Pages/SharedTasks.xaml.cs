@@ -11,16 +11,14 @@ namespace TimeManagementApp.Pages;
 
 public partial class SharedTasks : ContentPage
 {
-    //Firebase clients
     private readonly FirebaseService _firebaseService;
     public List<RegisteredUser> RegisteredUserList { get; set; } = [];//Zoznam userov nacitavanych z DB (pre picker)
     public ObservableCollection<SharedTask> SharedTaskList { get; set; } = [];//Zoznam Taskov nacitavanych z DB
     public User LoggedUser { get; set; }//Aktualne prihlaseny user
     public RegisteredUser SelectedUser { get; set; }//User vybraty v pickeri
 
-    //Konstruktor stranky
-    public SharedTasks(FirebaseService firebaseService)
-	{
+    public SharedTasks(FirebaseService firebaseService)//Konstruktor stranky
+    {
 		InitializeComponent();
         BindingContext = this;
         _firebaseService = firebaseService;

@@ -8,8 +8,6 @@
     Shell.FlyoutBehavior="Flyout"
     Title="Time Management">
 
-
-    
     <!-- login a sign up stranky -->
     <ShellContent Title="Log In" ContentTemplate="{DataTemplate Pages:LoginPage}" Route="LoginPage" Shell.FlyoutBehavior="Disabled" FlyoutItemIsVisible="False"/>
     <ShellContent Title="Sign Up" ContentTemplate="{DataTemplate Pages:SignUpPage}" Route="SignUpPage" Shell.FlyoutBehavior="Disabled" FlyoutItem.IsVisible="False"/>
@@ -35,5 +33,4 @@
         <ShellContent Title="Settings"
           ContentTemplate="{DataTemplate Pages:SettingsPage}" Route="SettingsPage"/>
     </FlyoutItem>
-
 </Shell>

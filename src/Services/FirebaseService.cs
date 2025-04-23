@@ -15,16 +15,17 @@ namespace TimeManagementApp.Services
         }
         private void InitializeFirebaseAuthClient()
         {
+            // Firebase Authentication client initialization with API key from secure storage
             _firebaseAuthClient = new FirebaseAuthClient(new FirebaseAuthConfig()
             {
                 ApiKey = SecureStorage.GetAsync("fireBaseAuthApiKey").Result ?? string.Empty,
                 AuthDomain = "timemanagement-4d83d.web.app",
                 Providers = [new EmailProvider()]
             });
-
         }
         private void InitializeFirebaseClient()
         {
+            // Firebase Database client initialization with database URL and authentication token
             _firebaseClient = new FirebaseClient("https://timemanagement-4d83d-default-rtdb.firebaseio.com/",
             new FirebaseOptions()
             {

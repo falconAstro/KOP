@@ -7,12 +7,9 @@ namespace TimeManagementApp.Pages;
 
 public partial class LoginPage : ContentPage
 {
-    //Firebase clients
     private readonly FirebaseService _firebaseService;
-
-    //Konstruktor stranky
-    public LoginPage(FirebaseService firebaseService)
-	{
+    public LoginPage(FirebaseService firebaseService)//Konstruktor stranky
+    {
 		InitializeComponent();
         _firebaseService = firebaseService;
     }

@@ -7,7 +7,6 @@ namespace TimeManagementApp
         public AppShell()
         {
             InitializeComponent();
-       
             Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
             Routing.RegisterRoute(nameof(PersonalTasks), typeof(PersonalTasks));
             Routing.RegisterRoute(nameof(SignUpPage), typeof(SignUpPage));

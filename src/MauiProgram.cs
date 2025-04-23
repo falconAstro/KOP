@@ -19,7 +19,6 @@ namespace TimeManagementApp
             SecureStorage.SetAsync("fireBaseAuthApiKey", "AIzaSyDf5i5Ycs - ygbAFJfdPV3_kwRtTHRJra0Q");
             builder.Logging.AddDebug();
 #endif
-           
             builder.Services.AddSingleton<FirebaseService>();
             // Pages
             builder.Services.AddTransient<LoginPage>();

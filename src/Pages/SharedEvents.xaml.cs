@@ -10,14 +10,12 @@ namespace TimeManagementApp.Pages;
 
 public partial class SharedEvents : ContentPage
 {
-    //Firebase clients
     private readonly FirebaseService _firebaseService;
     private DateTime DateNow;//Aktualny datum a cas
     private List<SharedEvent> TempSharedEventsList { get; set; } = [];//Zoznam Shared eventov
     public ObservableCollection<SharedEvent> SharedEventsList { get; set; } = [];//Zoznam zoradenych Shared eventov (pre zobrazenie v UI)
 
-    //Konstruktor stranky
-    public SharedEvents(FirebaseService firebaseService)
+    public SharedEvents(FirebaseService firebaseService)//Konstruktor stranky
     {
         InitializeComponent();
         BindingContext = this;

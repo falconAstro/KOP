@@ -11,7 +11,6 @@ namespace TimeManagementApp.Pages;
 
 public partial class ShoppingLists : ContentPage
 {
-    //Firebase clients
     private readonly FirebaseService _firebaseService;
     public User LoggedUser { get; set; }//Aktualne prihlaseny user
     public RegisteredUser SelectedUser { get; set; }//User vybraty v pickeri
@@ -19,8 +18,7 @@ public partial class ShoppingLists : ContentPage
     public ObservableCollection<ShoppingList> ShoppingListList { get; set; } = [];//Zoznam Shopping listov nacitavanych z DB
     public List<RegisteredUser> RegisteredUserList { get; set; } = [];//Zoznam userov nacitavanych z DB
 
-    //Konstruktor stranky
-    public ShoppingLists(FirebaseService firebaseService)
+    public ShoppingLists(FirebaseService firebaseService)//Konstruktor stranky
     {
         InitializeComponent();
         BindingContext = this;

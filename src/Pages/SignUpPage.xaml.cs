@@ -12,10 +12,8 @@ public partial class SignUpPage : ContentPage
 {
     //Firebase clients
     private readonly FirebaseService _firebaseService;
-
-    //Konstruktor stranky
-    public SignUpPage(FirebaseService firebaseService)
-	{
+    public SignUpPage(FirebaseService firebaseService)//Konstruktor stranky
+    {
 		InitializeComponent();
         _firebaseService = firebaseService;
     }
@@ -69,7 +67,6 @@ public partial class SignUpPage : ContentPage
             await Toast.Make("Error", ToastDuration.Short).Show();
         }
     }
-
     private async void BtnSignUp_Clicked(object sender, EventArgs e)//Stlacenie tlacidla registracie
     {
         await SignUp();

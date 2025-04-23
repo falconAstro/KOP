@@ -11,14 +11,12 @@ namespace TimeManagementApp.Pages;
 
 public partial class PersonalTasks : ContentPage
 {
-    //Firebase clients
     private readonly FirebaseService _firebaseService;
     public ObservableCollection<PersonalTask> PersonalTaskList { get; set; } = []; //Zoznam Taskov nacitavanych z DB
     public User LoggedUser { get; set; } //Premenna (neskor) obsahujuca aktualne prihlaseneho usera
 
-    //Konstruktor stranky
-    public PersonalTasks(FirebaseService firebaseService)
-	{
+    public PersonalTasks(FirebaseService firebaseService) //Konstruktor stranky
+    {
 		InitializeComponent();
         BindingContext = this;
         _firebaseService = firebaseService;
