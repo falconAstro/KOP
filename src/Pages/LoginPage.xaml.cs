@@ -2,6 +2,7 @@ using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using Firebase.Auth;
 using TimeManagementApp.Services;
+using TimeManagementApp.Resources.Languages;
 
 namespace TimeManagementApp.Pages;
 
@@ -28,17 +29,17 @@ public partial class LoginPage : ContentPage
         {
             //Prihlasenie
             await _firebaseService.AuthClient.SignInWithEmailAndPasswordAsync(email: EntryEMail.Text, password: EntryPassword.Text);
-            await Toast.Make("Signed in succesfully", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.SignInToast1, ToastDuration.Short).Show();
             //Otvorenie taskov
             await Shell.Current.GoToAsync($"//{nameof(PersonalTasks)}");
         }
         catch (FirebaseAuthException)//Errory spojene s Firebase Auth systemom (nespravny email, atd)
         {
-            await Toast.Make("Firebase Auth Error", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.ErrorToastFirebaseAuth, ToastDuration.Short).Show();
         }
         catch (Exception)//Ostatne errory
         {
-            await Toast.Make("Error", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.ErrorToast, ToastDuration.Short).Show();
         }
 	}
 

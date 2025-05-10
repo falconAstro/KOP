@@ -5,6 +5,7 @@ using Firebase.Database;
 using Firebase.Database.Query;
 using TimeManagementApp.Classes;
 using TimeManagementApp.Services;
+using TimeManagementApp.Resources.Languages;
 
 namespace TimeManagementApp.Pages;
 
@@ -34,13 +35,13 @@ public partial class SignUpPage : ContentPage
         {
             if(EntryUsername.Text == string.Empty)//Overenie ci uzivatel zadal Username
             {
-                await Toast.Make("Enter a username first!", ToastDuration.Short).Show();
+                await Toast.Make(AppResources.SignUpToastNullUsername, ToastDuration.Short).Show();
                 return;
             }
             //Porovnanie oboch password entry
             else if (EntryPassword.Text != EntryRepeatedPassword.Text)
             {
-                await Toast.Make("Passwords do not match!", ToastDuration.Short).Show();
+                await Toast.Make(AppResources.SignUpToastPasswordsMissmatch, ToastDuration.Short).Show();
                 return;
             }
             //Vytvorenie pouzivatela
@@ -51,20 +52,20 @@ public partial class SignUpPage : ContentPage
             //Vytvorenie objektu registered user v DB
             await _firebaseService.Client.Child("RegisteredUsers").PostAsync(new RegisteredUser { Username = EntryUsername.Text, UserId = LoggedUser.Uid, Email = EntryEMail.Text });
             _firebaseService.AuthClient.SignOut();//Log out
-            await Toast.Make("Signed up succesfully", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.SignUpToastSuccess, ToastDuration.Short).Show();
             await Shell.Current.GoToAsync("..");//Navrat na Log In page
         }
         catch (FirebaseAuthException)//Errory spojene s Firebase Auth systemom (nespravny email, atd)
         {
-            await Toast.Make($"Firebase Auth Error", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.ErrorToastFirebaseAuth, ToastDuration.Short).Show();
         }
         catch (FirebaseException)//Errory spojene s DB
         {
-            await Toast.Make($"Firebase DB Error", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.ErrorToastFirebase, ToastDuration.Short).Show();
         }
         catch (Exception)//Ostatne errory
         {
-            await Toast.Make("Error", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.ErrorToast, ToastDuration.Short).Show();
         }
     }
     private async void BtnSignUp_Clicked(object sender, EventArgs e)//Stlacenie tlacidla registracie

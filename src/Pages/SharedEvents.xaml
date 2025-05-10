@@ -2,26 +2,27 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TimeManagementApp.Pages.SharedEvents"
-             Title="Shared Events">
+             xmlns:lang="clr-namespace:TimeManagementApp.Resources.Languages"
+             Title="{x:Static lang:AppResources.SharedEventTitle}">
     <ScrollView>
         <VerticalStackLayout>
             <Label 
-                Text="Create a new shared event" 
+                Text="{x:Static lang:AppResources.SharedEventLabel1}" 
                 Style="{StaticResource Headline}"/>
             <DatePicker
                 x:Name="EventDatePicker"
                 Margin="5"/>
             <Entry 
                 x:Name="EntrySharedEvent" 
-                Placeholder="Enter a new event"
+                Placeholder="{x:Static lang:AppResources.SharedEventEntry1}"
                 Margin="5"/>
             <Button 
                 x:Name="BtnCreateSharedEvent"  
                 Clicked="BtnCreateSharedEvent_Clicked" 
-                Text="Create Event"
+                Text="{x:Static lang:AppResources.SharedEventButton}"
                 Margin="5"/>
             <Label
-                Text="Current events"
+                Text="{x:Static lang:AppResources.SharedEventLabel2}"
                 Style="{StaticResource Headline}"/>
         
             <CollectionView ItemsSource="{Binding SharedEventsList}">
@@ -43,7 +44,7 @@
                             </Grid>
                             <SwipeView.RightItems>
                                 <SwipeItems>
-                                    <SwipeItem Text="Delete" Invoked="OnDeleteSwipeItemInvoked" BackgroundColor="Red" ></SwipeItem>
+                                    <SwipeItem Text="{x:Static lang:AppResources.DeleteButton}" Invoked="OnDeleteSwipeItemInvoked" BackgroundColor="Red" ></SwipeItem>
                                 </SwipeItems>
                             </SwipeView.RightItems>
                         </SwipeView>

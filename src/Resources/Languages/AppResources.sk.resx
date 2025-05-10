@@ -1,0 +1,357 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="DeleteButton" xml:space="preserve">
+    <value>Vymazať</value>
+  </data>
+  <data name="ErrorToast" xml:space="preserve">
+    <value>Chyba</value>
+  </data>
+  <data name="ErrorToastDelete" xml:space="preserve">
+    <value>Nepodarilo sa identifikovať objekt pre vymazanie</value>
+  </data>
+  <data name="ErrorToastFirebase" xml:space="preserve">
+    <value>Firebase chyba</value>
+  </data>
+  <data name="ErrorToastFirebaseAuth" xml:space="preserve">
+    <value>Firebase auth chyba</value>
+  </data>
+  <data name="From" xml:space="preserve">
+    <value>Od:</value>
+  </data>
+  <data name="LoadedDataToast" xml:space="preserve">
+    <value>Dáta úspešne načítané</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Nie</value>
+  </data>
+  <data name="PersonalTaskButton" xml:space="preserve">
+    <value>Vytvoriť úlohu</value>
+  </data>
+  <data name="PersonalTaskEntry1" xml:space="preserve">
+    <value>Zadajte novú úlohu</value>
+  </data>
+  <data name="PersonalTaskLabel1" xml:space="preserve">
+    <value>Vytvorenie novej osobnej úlohy</value>
+  </data>
+  <data name="PersonalTaskLabel2" xml:space="preserve">
+    <value>Moje aktuálne úlohy</value>
+  </data>
+  <data name="PersonalTaskTitle" xml:space="preserve">
+    <value>Osobné úlohy</value>
+  </data>
+  <data name="SettingsLabel1" xml:space="preserve">
+    <value>Informácie o mojom účte:</value>
+  </data>
+  <data name="SettingsLabel2" xml:space="preserve">
+    <value>Informácie o aplikácii</value>
+  </data>
+  <data name="SettingsSignOut" xml:space="preserve">
+    <value>Odhlásiť sa</value>
+  </data>
+  <data name="SettingsTitle" xml:space="preserve">
+    <value>Nastavenia</value>
+  </data>
+  <data name="SharedEventButton" xml:space="preserve">
+    <value>Vytvoriť udalosť</value>
+  </data>
+  <data name="SharedEventConfirmation" xml:space="preserve">
+    <value>Udalosť úspešne vytvorená</value>
+  </data>
+  <data name="SharedEventDeletion" xml:space="preserve">
+    <value>Odstránenie udalosti</value>
+  </data>
+  <data name="SharedEventDeletionConfirmation" xml:space="preserve">
+    <value>Určite chcete odstrániť udalosť</value>
+  </data>
+  <data name="SharedEventDeletionToast" xml:space="preserve">
+    <value>Udalosť úspešne odstránená</value>
+  </data>
+  <data name="SharedEventEntry1" xml:space="preserve">
+    <value>Zadajte názov novej udalosti</value>
+  </data>
+  <data name="SharedEventLabel1" xml:space="preserve">
+    <value>Vytvorenie novej zdieľanej udalosti</value>
+  </data>
+  <data name="SharedEventLabel2" xml:space="preserve">
+    <value>Aktuálne udalosti</value>
+  </data>
+  <data name="SharedEventTitle" xml:space="preserve">
+    <value>Zdieľané udalosti</value>
+  </data>
+  <data name="SharedEventToastNull" xml:space="preserve">
+    <value>Najprv zadajte názov a udalosti a vyberte dátum!</value>
+  </data>
+  <data name="SharedTaskButton" xml:space="preserve">
+    <value>Vytvoriť úlohu</value>
+  </data>
+  <data name="SharedTaskEntry" xml:space="preserve">
+    <value>Zadajte novú úlohu</value>
+  </data>
+  <data name="SharedTaskLabel" xml:space="preserve">
+    <value>Vytvorenie novej zdieľanej úlohy</value>
+  </data>
+  <data name="SharedTaskLabel2" xml:space="preserve">
+    <value>Moje aktuálne úlohy</value>
+  </data>
+  <data name="SharedTaskPicker" xml:space="preserve">
+    <value>Vyberte cieľového použivateľa</value>
+  </data>
+  <data name="SharedTasksToastNull" xml:space="preserve">
+    <value>Najprv zadajte úlohu a vyberte použivateľa!</value>
+  </data>
+  <data name="SharedTaskTitle" xml:space="preserve">
+    <value>Zdieľané úlohy</value>
+  </data>
+  <data name="ShoppingListButton1" xml:space="preserve">
+    <value>Pridať položku do zoznamu</value>
+  </data>
+  <data name="ShoppingListButton2" xml:space="preserve">
+    <value>Vytvoriť nákupný zoznam</value>
+  </data>
+  <data name="ShoppingListConfirmationDeletion" xml:space="preserve">
+    <value>Určite chcete tento nákupný zoznam  odstrániť?</value>
+  </data>
+  <data name="ShoppingListCreationConfirm" xml:space="preserve">
+    <value>Určite chcete tento nákupný zoznam vytvoriť?</value>
+  </data>
+  <data name="ShoppingListCreationToast" xml:space="preserve">
+    <value>Nákupný zoznam vytvorený</value>
+  </data>
+  <data name="ShoppingListDelete" xml:space="preserve">
+    <value>Odtránenie nákupného zoznamu</value>
+  </data>
+  <data name="ShoppingListDeletioniToast" xml:space="preserve">
+    <value>Nákupný zoznam bol úspešne odstránený</value>
+  </data>
+  <data name="ShoppingListEntry" xml:space="preserve">
+    <value>Zadajte nákupnú položku</value>
+  </data>
+  <data name="ShoppingListLabel1" xml:space="preserve">
+    <value>Vytvorenie nového nákupného zoznamu</value>
+  </data>
+  <data name="ShoppingListLabel2" xml:space="preserve">
+    <value>Moje aktuálne nákupné zoznamy</value>
+  </data>
+  <data name="ShoppingListTitle" xml:space="preserve">
+    <value>Nákupné zoznamy</value>
+  </data>
+  <data name="ShoppingListToastNull" xml:space="preserve">
+    <value>Najprv zadajte položku!</value>
+  </data>
+  <data name="ShoppingListToastNull2" xml:space="preserve">
+    <value>Najprv vyberte použivateľa a pridajte položky do zoznamu!</value>
+  </data>
+  <data name="SignInButton1" xml:space="preserve">
+    <value>Prihlásiť sa</value>
+  </data>
+  <data name="SignInButton2" xml:space="preserve">
+    <value>Registrácia</value>
+  </data>
+  <data name="SignInEntry1" xml:space="preserve">
+    <value>Zadajte svoj e-mail</value>
+  </data>
+  <data name="SignInEntry2" xml:space="preserve">
+    <value>Zadajte svoje heslo</value>
+  </data>
+  <data name="SignInLabel1" xml:space="preserve">
+    <value>Prihláste sa prosím!</value>
+  </data>
+  <data name="SignInLabel2" xml:space="preserve">
+    <value>E-mail:</value>
+  </data>
+  <data name="SignInLabel3" xml:space="preserve">
+    <value>Heslo:</value>
+  </data>
+  <data name="SignInLabel4" xml:space="preserve">
+    <value>Nemáte účet?</value>
+  </data>
+  <data name="SignInTitle" xml:space="preserve">
+    <value>Prihlásenie</value>
+  </data>
+  <data name="SignInToast1" xml:space="preserve">
+    <value>Úspešné prihlásenie</value>
+  </data>
+  <data name="SignOutConfirmation" xml:space="preserve">
+    <value>Určite sa chcete odhlásiť?</value>
+  </data>
+  <data name="SignOutSuccess" xml:space="preserve">
+    <value>Použivateľ úspešne odhlásený</value>
+  </data>
+  <data name="SignUpButton" xml:space="preserve">
+    <value>Registrácia</value>
+  </data>
+  <data name="SignUpEntry1" xml:space="preserve">
+    <value>Zadajte svoje použivateľské meno</value>
+  </data>
+  <data name="SignUpEntry2" xml:space="preserve">
+    <value>Zadajte svoj e-mail</value>
+  </data>
+  <data name="SignUpEntry3" xml:space="preserve">
+    <value>Zadajte nové heslo</value>
+  </data>
+  <data name="SignUpEntry4" xml:space="preserve">
+    <value>Zadajte heslo znova</value>
+  </data>
+  <data name="SignUpLabel1" xml:space="preserve">
+    <value>Vytvorenie nového účtu</value>
+  </data>
+  <data name="SignUpLabel2" xml:space="preserve">
+    <value>Použivateľské meno:</value>
+  </data>
+  <data name="SignUpLabel3" xml:space="preserve">
+    <value>E-mail:</value>
+  </data>
+  <data name="SignUpLabel4" xml:space="preserve">
+    <value>Heslo:</value>
+  </data>
+  <data name="SignUpLabel5" xml:space="preserve">
+    <value>Heslo znova:</value>
+  </data>
+  <data name="SignUpTitle" xml:space="preserve">
+    <value>Registrácia</value>
+  </data>
+  <data name="SignUpToastNullUsername" xml:space="preserve">
+    <value>Najprv zadajte použivateľské meno!</value>
+  </data>
+  <data name="SignUpToastPasswordsMissmatch" xml:space="preserve">
+    <value>Heslá sa nezhodujú!</value>
+  </data>
+  <data name="SignUpToastSuccess" xml:space="preserve">
+    <value>Úspešná registrácia</value>
+  </data>
+  <data name="TaskDeletionConfirmation" xml:space="preserve">
+    <value>Určite chcete odstrániť úlohu</value>
+  </data>
+  <data name="TaskToast" xml:space="preserve">
+    <value>Úloha úspešne vytvorená</value>
+  </data>
+  <data name="TaskToastDelete" xml:space="preserve">
+    <value>Úloha úspešne odstránená</value>
+  </data>
+  <data name="TaskToastDeletion" xml:space="preserve">
+    <value>Odstránenie úlohy</value>
+  </data>
+  <data name="TaskToastNull" xml:space="preserve">
+    <value>Najprv zadajte úlohu!</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Áno</value>
+  </data>
+</root>

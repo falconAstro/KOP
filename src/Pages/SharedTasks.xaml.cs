@@ -6,6 +6,7 @@ using Firebase.Database.Query;
 using System.Collections.ObjectModel;
 using TimeManagementApp.Services;
 using TimeManagementApp.Classes;
+using TimeManagementApp.Resources.Languages;
 
 namespace TimeManagementApp.Pages;
 
@@ -37,19 +38,19 @@ public partial class SharedTasks : ContentPage
             await RemoveLoggedUserFromList();//Odstranenie aktualne prihlaseneho usera zo zoznamu
             picker.ItemsSource = RegisteredUserList;
             await LoadSharedTasksToCollection();
-            await Toast.Make("Loaded data successfully", ToastDuration.Long).Show();
+            await Toast.Make(AppResources.LoadedDataToast, ToastDuration.Long).Show();
         }
         catch (FirebaseAuthException)
         {
-            await Toast.Make("Firebase Auth Error", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.ErrorToastFirebaseAuth, ToastDuration.Short).Show();
         }
         catch (FirebaseException)
         {
-            await Toast.Make("Firebase Error", ToastDuration.Long).Show();
+            await Toast.Make(AppResources.ErrorToastFirebase, ToastDuration.Long).Show();
         }
         catch (Exception)
         {
-            await Toast.Make("Error", ToastDuration.Long).Show();
+            await Toast.Make(AppResources.ErrorToast, ToastDuration.Long).Show();
         }
     }
 
@@ -90,15 +91,15 @@ public partial class SharedTasks : ContentPage
             await _firebaseService.Client.Child("SharedTask").Child(SelectedUser.UserId).PostAsync(new SharedTask { Task = EntrySharedTask.Text, Username = LoggedUser.Info.DisplayName });
             EntrySharedTask.Text = string.Empty;
             picker.SelectedItem = null;
-            await Toast.Make("Task created successfully", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.TaskToast, ToastDuration.Short).Show();
         }
         catch (FirebaseException)
         {
-            await Toast.Make("Firebase Error", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.ErrorToastFirebase, ToastDuration.Short).Show();
         }
         catch (Exception)
         {
-            await Toast.Make("Error", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.ErrorToast, ToastDuration.Short).Show();
         }
     }
 
@@ -106,7 +107,7 @@ public partial class SharedTasks : ContentPage
     {
         if (string.IsNullOrEmpty(EntrySharedTask.Text) || SelectedUser == null)
         {
-            await Toast.Make("Enter a task and pick a user first!", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.SharedTasksToastNull, ToastDuration.Short).Show();
             return;
         }
         await CreateTaskAsync();
@@ -144,25 +145,25 @@ public partial class SharedTasks : ContentPage
                 var SwipeView = swipeItem.BindingContext as SharedTask;
                 if (SwipeView == null)
                 {
-                    await Toast.Make("Failed to identify item for deletion", ToastDuration.Short).Show();
+                    await Toast.Make(AppResources.ErrorToastDelete, ToastDuration.Short).Show();
                     return;
                 }
-                bool isDeletionConfirmed = await DisplayAlert("Delete Task", $"Are you sure you want to delete the task \"{SwipeView.Task}\"?", "Yes", "No");
+                bool isDeletionConfirmed = await DisplayAlert(AppResources.TaskToastDeletion, $"{AppResources.TaskDeletionConfirmation} \"{SwipeView.Task}\"?",AppResources.Yes, AppResources.No);
                 if (isDeletionConfirmed)
                 {
                     await _firebaseService.Client.Child("SharedTask").Child(LoggedUser.Uid).Child($"{SwipeView.TaskId}").DeleteAsync();
-                    await Toast.Make("Task successfully deleted", ToastDuration.Short).Show();
+                    await Toast.Make(AppResources.TaskToastDelete, ToastDuration.Short).Show();
                     await LoadSharedTasksToCollection();
                 }
             }
         }
         catch (FirebaseException)
         {
-            await Toast.Make("Firebase Error", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.ErrorToastFirebase, ToastDuration.Short).Show();
         }
         catch (Exception)
         {
-            await Toast.Make("Error", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.ErrorToast, ToastDuration.Short).Show();
         }
     }
 }

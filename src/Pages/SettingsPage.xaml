@@ -2,9 +2,10 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TimeManagementApp.Pages.SettingsPage"
-             Title="Settings">
+             xmlns:lang="clr-namespace:TimeManagementApp.Resources.Languages"
+             Title="{x:Static lang:AppResources.SettingsTitle}">
     <VerticalStackLayout>
-        <Label Text="My account details:"
+        <Label Text="{x:Static lang:AppResources.SettingsLabel1}"
                Style="{StaticResource Headline}"/>
         <Label x:Name="UsernameLabel" Margin="5"/>
         <Label x:Name="IdLabel" Margin="5"/>
@@ -12,9 +13,9 @@
         <Button 
             x:Name="btnSignOut"  
             Clicked="BtnSignOut_Clicked" 
-            Text="Sign Out"
+            Text="{x:Static lang:AppResources.SettingsSignOut}"
             Margin="6"/>
-        <Label Text="App information"
+        <Label Text="{x:Static lang:AppResources.SettingsLabel2}"
                Style="{StaticResource Headline}"/>
         <Label Text="Beta 1.0"
                Margin="5"/>

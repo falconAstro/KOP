@@ -5,6 +5,7 @@ using Firebase.Database.Query;
 using System.Collections.ObjectModel;
 using TimeManagementApp.Classes;
 using TimeManagementApp.Services;
+using TimeManagementApp.Resources.Languages;
 
 namespace TimeManagementApp.Pages;
 
@@ -29,15 +30,15 @@ public partial class SharedEvents : ContentPage
             DateNow = DateTime.Now;//Aktualny datum a cas
             SharedEventsList.Clear();
             await LoadEventsAsync();
-            await Toast.Make("Loaded data successfully", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.LoadedDataToast, ToastDuration.Short).Show();
         }
         catch (FirebaseException)
         {
-            await Toast.Make("Firebase Error", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.ErrorToastFirebase, ToastDuration.Short).Show();
         }
         catch (Exception)
         {
-            await Toast.Make("Error", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.ErrorToast, ToastDuration.Short).Show();
         }
     }
     public async Task LoadEventsAsync()//Nacitanie Shared eventov z databazy a ich zoradenie podla datumu
@@ -70,16 +71,16 @@ public partial class SharedEvents : ContentPage
                 Date = EventDatePicker.Date
             });
             EntrySharedEvent.Text = string.Empty;
-            await Toast.Make("Event created successfully", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.SharedEventConfirmation, ToastDuration.Short).Show();
             await LoadEventsAsync();
         }
         catch (FirebaseException)
         {
-            await Toast.Make("Firebase Error", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.ErrorToastFirebase, ToastDuration.Short).Show();
         }
         catch (Exception)
         {
-            await Toast.Make("Error", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.ErrorToast, ToastDuration.Short).Show();
         }
     }
 
@@ -87,7 +88,7 @@ public partial class SharedEvents : ContentPage
     {
         if (string.IsNullOrEmpty(EntrySharedEvent.Text))
         {
-            await Toast.Make("Enter an event and pick a date first!", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.SharedEventToastNull, ToastDuration.Short).Show();
             return;
         }
         await CreateEventAsync();
@@ -102,25 +103,25 @@ public partial class SharedEvents : ContentPage
                 var SwipeView = swipeItem.BindingContext as SharedEvent;
                 if (SwipeView == null)
                 {
-                    await DisplayAlert("Error", "Failed to identify the item to delete.", "OK");
+                    await DisplayAlert(AppResources.ErrorToast, AppResources.ErrorToastDelete, "OK");
                     return;
                 }
-                bool isDeletionConfirmed = await DisplayAlert("Delete Event", $"Are you sure you want to delete the event \"{SwipeView.Event}\"?", "Yes", "No");
+                bool isDeletionConfirmed = await DisplayAlert(AppResources.SharedEventDeletion, $"{AppResources.SharedEventDeletionConfirmation} \"{SwipeView.Event}\"?",AppResources.Yes, AppResources.No);
                 if (isDeletionConfirmed)
                 {
                     await _firebaseService.Client.Child("SharedEvent").Child($"{SwipeView.EventId}").DeleteAsync();
-                    await Toast.Make("Event deleted successfully", ToastDuration.Short).Show();
+                    await Toast.Make(AppResources.SharedEventDeletionToast, ToastDuration.Short).Show();
                     await LoadEventsAsync();
                 }
             }
         }
         catch (FirebaseException)
         {
-            await Toast.Make("Firebase Error", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.ErrorToastFirebase, ToastDuration.Short).Show();
         }
         catch (Exception)
         {
-            await Toast.Make("Error", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.ErrorToast, ToastDuration.Short).Show();
         }
     }
 }

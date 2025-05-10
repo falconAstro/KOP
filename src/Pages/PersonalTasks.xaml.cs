@@ -6,6 +6,7 @@ using Firebase.Database.Query;
 using System.Collections.ObjectModel;
 using TimeManagementApp.Classes;
 using TimeManagementApp.Services;
+using TimeManagementApp.Resources.Languages;
 
 namespace TimeManagementApp.Pages;
 
@@ -29,19 +30,19 @@ public partial class PersonalTasks : ContentPage
             base.OnNavigatedTo(args);
             LoggedUser = _firebaseService.AuthClient.User;//Aktualne prihlaseny user
             await LoadPersonalTasksToCollection();
-            await Toast.Make("Loaded data successfully", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.LoadedDataToast, ToastDuration.Short).Show();
         }
         catch (FirebaseAuthException)
         {
-            await Toast.Make("Firebase Auth Error", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.ErrorToastFirebaseAuth, ToastDuration.Short).Show();
         }
         catch (FirebaseException)
         {
-            await Toast.Make("Firebase Error", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.ErrorToastFirebase, ToastDuration.Short).Show();
         }
         catch (Exception)
         {
-            await Toast.Make("Error", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.ErrorToast, ToastDuration.Short).Show();
         }
     }
 
@@ -70,15 +71,15 @@ public partial class PersonalTasks : ContentPage
         {
             await _firebaseService.Client.Child("PersonalTask").Child(LoggedUser.Uid).PostAsync(new PersonalTask { Task = EntryPersonalTask.Text });
             EntryPersonalTask.Text = string.Empty;
-            await Toast.Make("Task successfully created", ToastDuration.Long).Show();
+            await Toast.Make(AppResources.TaskToast, ToastDuration.Long).Show();
         }
         catch (FirebaseException)
         {
-            await Toast.Make("Firebase Error", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.ErrorToastFirebase, ToastDuration.Short).Show();
         }
         catch (Exception)
         {
-            await Toast.Make("Error", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.ErrorToast, ToastDuration.Short).Show();
         }
     }
 
@@ -86,7 +87,7 @@ public partial class PersonalTasks : ContentPage
     {
         if(string.IsNullOrEmpty(EntryPersonalTask.Text))
         {
-            await Toast.Make("Enter a task first!", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.TaskToastNull, ToastDuration.Short).Show();
             return;
         }
         await CreateTaskAsync();
@@ -102,25 +103,25 @@ public partial class PersonalTasks : ContentPage
                 var SwipeView = swipeItem.BindingContext as PersonalTask;
                 if (SwipeView == null)
                 {
-                    await Toast.Make("Failed to identify item for deletion", ToastDuration.Short).Show();
+                    await Toast.Make(AppResources.ErrorToastDelete, ToastDuration.Short).Show();
                     return;
                 }
-                bool isDeletionConfirmed = await DisplayAlert("Delete Task", $"Are you sure you want to delete the task \"{SwipeView.Task}\"?", "Yes", "No");
+                bool isDeletionConfirmed = await DisplayAlert(AppResources.TaskToastDeletion, $"{AppResources.TaskDeletionConfirmation}\"{SwipeView.Task}\"?", AppResources.Yes,AppResources.No);
                 if (isDeletionConfirmed)
                     {
                      await _firebaseService.Client.Child("PersonalTask").Child(LoggedUser.Uid).Child($"{SwipeView.TaskId}").DeleteAsync();
-                     await Toast.Make("Task successfully deleted", ToastDuration.Short).Show();
+                     await Toast.Make(AppResources.TaskToastDelete, ToastDuration.Short).Show();
                      await LoadPersonalTasksToCollection();
                     }
             }
         }
         catch(FirebaseException)
         {
-            await Toast.Make("Firebase Error", ToastDuration.Long).Show();
+            await Toast.Make(AppResources.ErrorToastFirebase, ToastDuration.Long).Show();
         }
         catch(Exception)
         {
-            await Toast.Make("Error", ToastDuration.Long).Show();
+            await Toast.Make(AppResources.ErrorToast, ToastDuration.Long).Show();
         }
     }
 }

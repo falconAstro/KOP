@@ -2,23 +2,24 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TimeManagementApp.Pages.PersonalTasks"
-             Title="Personal Tasks">
+             xmlns:lang="clr-namespace:TimeManagementApp.Resources.Languages"
+             Title="{x:Static lang:AppResources.PersonalTaskTitle}">
     <ScrollView>
         <VerticalStackLayout>
             <Label 
-                Text="Create a new personal task"
+                Text="{x:Static lang:AppResources.PersonalTaskLabel1}"
                 Style="{StaticResource Headline}"/>
             <Entry 
                 x:Name="EntryPersonalTask" 
-                Placeholder="Enter the new task"
+                Placeholder="{x:Static lang:AppResources.PersonalTaskEntry1}"
                 Margin="5"/>
             <Button 
                 x:Name="BtnCreatePersonalTask"  
                 Clicked="BtnCreatePersonalTask_Clicked" 
-                Text="Create Task"
+                Text="{x:Static lang:AppResources.PersonalTaskButton}"
                 Margin="5"/>
             <Label
-                Text="My current personal tasks"
+                Text="{x:Static lang:AppResources.PersonalTaskLabel2}"
                 Style="{StaticResource Headline}"/>
             
             <!-- zobrazenie zoznamu taskov nacitanych z databazy-->
@@ -31,7 +32,7 @@
                             </Grid>
                             <SwipeView.RightItems>
                                 <SwipeItems>
-                                    <SwipeItem Text="Delete" Invoked="OnDeleteSwipeItemInvoked" BackgroundColor="Red" ></SwipeItem>
+                                    <SwipeItem Text="{x:Static lang:AppResources.DeleteButton}" Invoked="OnDeleteSwipeItemInvoked" BackgroundColor="Red" ></SwipeItem>
                                 </SwipeItems>
                             </SwipeView.RightItems>
                         </SwipeView>

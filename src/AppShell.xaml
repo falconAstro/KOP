@@ -5,32 +5,33 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:TimeManagementApp"
     xmlns:Pages="clr-namespace:TimeManagementApp.Pages"
+    xmlns:lang="clr-namespace:TimeManagementApp.Resources.Languages"
     Shell.FlyoutBehavior="Flyout"
     Title="Time Management">
 
     <!-- login a sign up stranky -->
-    <ShellContent Title="Log In" ContentTemplate="{DataTemplate Pages:LoginPage}" Route="LoginPage" Shell.FlyoutBehavior="Disabled" FlyoutItemIsVisible="False"/>
-    <ShellContent Title="Sign Up" ContentTemplate="{DataTemplate Pages:SignUpPage}" Route="SignUpPage" Shell.FlyoutBehavior="Disabled" FlyoutItem.IsVisible="False"/>
+    <ShellContent Title="{x:Static lang:AppResources.SignInTitle}" ContentTemplate="{DataTemplate Pages:LoginPage}" Route="LoginPage" Shell.FlyoutBehavior="Disabled" FlyoutItemIsVisible="False"/>
+    <ShellContent Title="{x:Static lang:AppResources.SignUpTitle}" ContentTemplate="{DataTemplate Pages:SignUpPage}" Route="SignUpPage" Shell.FlyoutBehavior="Disabled" FlyoutItem.IsVisible="False"/>
     
     <!-- ostatne viditelne stranky vo flyout menu-->
-    <FlyoutItem Title="Personal Tasks">
-        <ShellContent Title="Personal Tasks"
+    <FlyoutItem Title="{x:Static lang:AppResources.PersonalTaskTitle}">
+        <ShellContent Title="{x:Static lang:AppResources.PersonalTaskTitle}"
                       ContentTemplate="{DataTemplate Pages:PersonalTasks}" Route="PersonalTasks" />
     </FlyoutItem>
-    <FlyoutItem Title="Shared Tasks">
-        <ShellContent Title="Shared Tasks"
+    <FlyoutItem Title="{x:Static lang:AppResources.SharedTaskTitle}">
+        <ShellContent Title="{x:Static lang:AppResources.SharedTaskTitle}"
                   ContentTemplate="{DataTemplate Pages:SharedTasks}" Route="SharedTasks"/>
     </FlyoutItem>
-    <FlyoutItem Title="Shared Events">
-        <ShellContent Title="Shared Events"
+    <FlyoutItem Title="{x:Static lang:AppResources.SharedEventTitle}">
+        <ShellContent Title="{x:Static lang:AppResources.SharedEventTitle}"
               ContentTemplate="{DataTemplate Pages:SharedEvents}" Route="SharedEvents"/>
     </FlyoutItem>
-    <FlyoutItem Title="Shopping Lists">
-        <ShellContent Title="Shopping Lists"
+    <FlyoutItem Title="{x:Static lang:AppResources.ShoppingListTitle}">
+        <ShellContent Title="{x:Static lang:AppResources.ShoppingListTitle}"
               ContentTemplate="{DataTemplate Pages:ShoppingLists}" Route="ShoppingLists"/>
     </FlyoutItem>
-    <FlyoutItem Title="Settings">
-        <ShellContent Title="Settings"
+    <FlyoutItem Title="{x:Static lang:AppResources.SettingsTitle}">
+        <ShellContent Title="{x:Static lang:AppResources.SettingsTitle}"
           ContentTemplate="{DataTemplate Pages:SettingsPage}" Route="SettingsPage"/>
     </FlyoutItem>
 </Shell>

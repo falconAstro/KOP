@@ -6,6 +6,7 @@ using TimeManagementApp.Classes;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using TimeManagementApp.Services;
+using TimeManagementApp.Resources.Languages;
 
 namespace TimeManagementApp.Pages;
 
@@ -38,19 +39,19 @@ public partial class ShoppingLists : ContentPage
             await RemoveLoggedUserFromList();//Odstranenie aktualne prihlaseneho usera zo zoznamu
             picker.ItemsSource = RegisteredUserList;
             await LoadShoppingListsToCollection();
-            await Toast.Make("Loaded data successfully", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.LoadedDataToast, ToastDuration.Short).Show();
         }
         catch (FirebaseAuthException)
         {
-            await Toast.Make("Firebase Auth Error", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.ErrorToastFirebaseAuth, ToastDuration.Short).Show();
         }
         catch (FirebaseException)
         {
-            await Toast.Make("Firebase Error", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.ErrorToastFirebase, ToastDuration.Short).Show();
         }
         catch (Exception)
         {
-            await Toast.Make("Error", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.ErrorToast, ToastDuration.Short).Show();
         }
     }
 
@@ -89,7 +90,7 @@ public partial class ShoppingLists : ContentPage
     {
         if (string.IsNullOrEmpty(EntryShoppingItem.Text))
         {
-            await Toast.Make("Enter an item first!", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.ShoppingListToastNull, ToastDuration.Short).Show();
             return;
         }
         TempShoppingItems.Add(EntryShoppingItem.Text);
@@ -103,22 +104,22 @@ public partial class ShoppingLists : ContentPage
     {
         try
         {
-            bool isCreationConfirmed = await DisplayAlert("Create Shopping List", $"Are you sure you want to create this shopping list?", "Yes", "No");
+            bool isCreationConfirmed = await DisplayAlert(AppResources.ShoppingListLabel1, $"{AppResources.ShoppingListCreationConfirm}",AppResources.Yes,AppResources.No);
             if (isCreationConfirmed)
             {
                 await _firebaseService.Client.Child("ShoppingList").Child(SelectedUser.UserId).PostAsync(new ShoppingList { ShoppingItems = TempShoppingItems, Username = LoggedUser.Info.DisplayName, Date = DateTime.Now.ToString("ddd dd.MM.yyyy HH:mm") });
-                await Toast.Make("Shopping list created", ToastDuration.Short).Show();
+                await Toast.Make(AppResources.ShoppingListCreationToast, ToastDuration.Short).Show();
                 picker.SelectedItem = null;
                 TempShoppingItems.Clear();
             }
         }
         catch (FirebaseException)
         {
-            await Toast.Make("Firebase Error", ToastDuration.Long).Show();
+            await Toast.Make(AppResources.ErrorToastFirebase, ToastDuration.Long).Show();
         }
         catch (Exception)
         {
-            await Toast.Make("Error", ToastDuration.Long).Show();
+            await Toast.Make(AppResources.ErrorToast, ToastDuration.Long).Show();
         }
     }
 
@@ -126,7 +127,7 @@ public partial class ShoppingLists : ContentPage
     {
         if (TempShoppingItems.Count==0 || SelectedUser == null)
         {
-            await Toast.Make("Enter items and pick a user first!", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.ShoppingListToastNull2, ToastDuration.Short).Show();
             return;
         }
         await CreateShoppingListAsync();
@@ -162,25 +163,25 @@ public partial class ShoppingLists : ContentPage
                 var SwipeView = swipeItem.BindingContext as ShoppingList;
                 if (SwipeView == null)
                 {
-                    await DisplayAlert("Error", "Failed to identify the item to delete.", "OK");
+                    await DisplayAlert(AppResources.ErrorToast,AppResources.ErrorToastDelete, "OK");
                     return;
                 }
-                bool isDeletionConfirmed = await DisplayAlert("Delete Shopping List", $"Are you sure you want to delete this shopping list?", "Yes", "No");
+                bool isDeletionConfirmed = await DisplayAlert(AppResources.ShoppingListDelete,AppResources.ShoppingListConfirmationDeletion,AppResources.Yes,AppResources.No);
                 if (isDeletionConfirmed)
                 {
                     await _firebaseService. Client.Child("ShoppingList").Child(LoggedUser.Uid).Child($"{SwipeView.ListId}").DeleteAsync();
-                    await Toast.Make("Shopping list successfully deleted", ToastDuration.Short).Show();
+                    await Toast.Make(AppResources.ShoppingListDeletioniToast, ToastDuration.Short).Show();
                     await LoadShoppingListsToCollection();
                 }
             }
         }
         catch (FirebaseException)
         {
-            await Toast.Make("Firebase Error", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.ErrorToastFirebase, ToastDuration.Short).Show();
         }
         catch (Exception)
         {
-            await Toast.Make("Error", ToastDuration.Short).Show();
+            await Toast.Make(AppResources.ErrorToast, ToastDuration.Short).Show();
         }
     }
 }

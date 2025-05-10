@@ -1,35 +1,36 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TimeManagementApp.Pages.ShoppingLists"
-             Title="Shopping Lists">
+             xmlns:lang="clr-namespace:TimeManagementApp.Resources.Languages"
+             Title="{x:Static lang:AppResources.ShoppingListTitle}">
     <ScrollView>
         <VerticalStackLayout>
             <Label 
-                Text="Create a new shopping list" 
+                Text="{x:Static lang:AppResources.ShoppingListLabel1}" 
                 Style="{StaticResource Headline}"/>
             <Picker 
                 x:Name="picker"
-                Title="Select a target user"
+                Title="{x:Static lang:AppResources.SharedTaskPicker}"
                 Margin="5"
                 ItemsSource ="{Binding RegisteredUserList}"
                 ItemDisplayBinding="{Binding Username}"
                 SelectedItem="{Binding SelectedUser}"/>
             <Entry 
                 x:Name="EntryShoppingItem" 
-                Placeholder="Enter shopping item"
+                Placeholder="{x:Static lang:AppResources.ShoppingListEntry}"
                 Margin="5"/>
             <Button 
                 x:Name="BtnAddShoppingItem"  
                 Clicked="BtnAddShoppingItem_Clicked" 
-                Text="Add item to shopping list"
+                Text="{x:Static lang:AppResources.ShoppingListButton1}"
                 Margin="5"/>
             <Button 
                 x:Name="BtnCreateShoppingList"  
                 Clicked="BtnCreateShoppingList_Clicked" 
-                Text="Create shopping list"
+                Text="{x:Static lang:AppResources.ShoppingListButton2}"
                 Margin="5"/>
             <Label
-                Text="My current shopping lists"
+                Text="{x:Static lang:AppResources.ShoppingListLabel2}"
                 Style="{StaticResource Headline}"/>
 
             <CollectionView ItemsSource="{Binding ShoppingListList}">
@@ -47,7 +48,7 @@
                                     <ColumnDefinition Width="6*"/>
                                 </Grid.ColumnDefinitions>
                                 <Label Text = "{Binding Date}" Style="{StaticResource ItemLabel}" Grid.Row="0" Grid.ColumnSpan="2" FontAttributes="Bold"/>
-                                <Label Text="From:" Style="{StaticResource ItemLabel}" Grid.Row="1" Grid.Column="0" FontAttributes="Bold"/>
+                                <Label Text="{x:Static lang:AppResources.From}" Style="{StaticResource ItemLabel}" Grid.Row="1" Grid.Column="0" FontAttributes="Bold"/>
                                 <Label Text = "{Binding Username}" Style="{StaticResource ItemLabel}" Grid.Row="1" Grid.Column="1" FontAttributes="Italic"/>
                                 <CollectionView ItemsSource="{Binding ShoppingItems}" Grid.ColumnSpan="2" Grid.Row="2">
                                     <CollectionView.ItemTemplate>
@@ -59,7 +60,7 @@
                             </Grid>
                             <SwipeView.RightItems>
                                 <SwipeItems>
-                                    <SwipeItem Text="Delete" Invoked="OnDeleteSwipeItemInvoked" BackgroundColor="Red" ></SwipeItem>
+                                    <SwipeItem Text="{x:Static lang:AppResources.DeleteButton}" Invoked="OnDeleteSwipeItemInvoked" BackgroundColor="Red" ></SwipeItem>
                                 </SwipeItems>
                             </SwipeView.RightItems>
                         </SwipeView>

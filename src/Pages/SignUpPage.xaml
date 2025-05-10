@@ -2,47 +2,48 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TimeManagementApp.Pages.SignUpPage"
-             Title="Sign Up">
+             xmlns:lang="clr-namespace:TimeManagementApp.Resources.Languages"
+             Title="{x:Static lang:AppResources.SignUpTitle}">
     <VerticalStackLayout>
         <Label 
-            Text="Create a new account" 
+            Text="{x:Static lang:AppResources.SignUpLabel1}" 
             FontSize="16"
             FontAttributes="Bold"
             Margin="5,0,5,3" />
         <Label 
-            Text="Username:"
+            Text="{x:Static lang:AppResources.SignUpLabel2}"
             Margin="5,0,5,0"/>
         <Entry
             x:Name="EntryUsername"
-            Placeholder="Enter a new username"
+            Placeholder="{x:Static lang:AppResources.SignUpEntry1}"
             Margin="5,0,5,3"/>
         <Label 
-            Text="E-mail:"
+            Text="{x:Static lang:AppResources.SignUpLabel3}"
             Margin="5,0,5,0"/>
         <Entry
             x:Name="EntryEMail"
-            Placeholder="Enter your e-mail"
+            Placeholder="{x:Static lang:AppResources.SignUpEntry2}"
             Margin="5,0,5,3"/>
         <Label 
-            Text="Password:"
+            Text="{x:Static lang:AppResources.SignUpLabel4}"
             Margin="5,0,5,0"/>
         <Entry
             x:Name="EntryPassword"
-            Placeholder="Enter a new password"
+            Placeholder="{x:Static lang:AppResources.SignUpEntry3}"
             Margin="5,0,5,3"
             IsPassword="True"/>
         <Label 
-            Text="Repeat Password:"
+            Text="{x:Static lang:AppResources.SignUpLabel5}"
             Margin="5,0,5,0"/>
         <Entry
             x:Name="EntryRepeatedPassword"
-            Placeholder="Repeat the password"
+            Placeholder="{x:Static lang:AppResources.SignUpEntry4}"
             Margin="5,0,5,3"
             IsPassword="True"/>
         <Button 
             x:Name="btnSignUp"  
             Clicked="BtnSignUp_Clicked" 
-            Text="Sign Up"
+            Text="{x:Static lang:AppResources.SignUpButton}"
             Margin="5,0,5,0"/>
     </VerticalStackLayout>
 </ContentPage>
